@@ -1,3 +1,55 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [Template]
+
+Heading format
+
+```
+[{{ semantic version }}] - {{ ISO Date }}
+```
+
+Examples
+```
+## [1.1.1] - 2023-03-05
+## [2.0.0] - 2024-01-01
+```
+
+### Added
+for new features.
+
+Item format
+
+```
+- {{ scope }}
+  - {{ short description }} (#{{issue number}})
+```
+
+Examples
+- i18n
+  - Improve french translations ([#33][i33])
+
+### Changed
+for changes in existing functionality
+
+### Deprecated
+for soon-to-be removed features
+
+### Removed
+for now removed features
+
+### Fixed
+for any bug fixes
+
+### Security
+in case of vulnerabilities
+
 # Changelog that is not actually a Changelog
 
 Below is the list of options, keybindings, Lua functions, plugins, and other Neovim features I tried that did not work out for me.
@@ -222,3 +274,5 @@ LSP:
     At one point, my repository grew up to 14MB when it is just ~2000 lines of Lua code and plain text files.
     Follow GitHub guide on [Removing sensitive data from a repository](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository) to remove large files.
 
+
+[i33]: https://github.com/ggallovalle/kbroom-nvim/issues/33

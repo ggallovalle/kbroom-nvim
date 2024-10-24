@@ -1,4 +1,4 @@
-# Theovim
+# kbroom-nvim
 
 ![theovim-banner](./assets/theovim-banner.jpg)
 
