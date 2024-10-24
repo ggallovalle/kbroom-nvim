@@ -32,6 +32,22 @@ local Catppuccin = {
 }
 
 
+local Gruvbox = {
+  "ellisonleao/gruvbox.nvim",
+  main = "gruvbox",
+  lazy = false,
+  priority = 1000,
+  opts = {},
+  config = function(spec, opts)
+    require(spec.main).setup(opts)
+
+    if settings.colorscheme == "gruvbox" then
+      vim.cmd.colorscheme("gruvbox")
+    end
+  end
+}
+
+
 local TokyoNight = {
   "folke/tokyonight.nvim",
   main = "tokyonight",
@@ -59,5 +75,6 @@ local TokyoNight = {
 
 return {
   Catppuccin,
+  Gruvbox,
   TokyoNight,
 }

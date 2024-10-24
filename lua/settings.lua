@@ -3,17 +3,14 @@ local M = {}
 M.colorscheme_is_transparent = false
 
 -- M.colorscheme = "gruvbox"
--- M.colorscheme_flavor = "material"
--- M.colorscheme_flavor = "mix"
--- M.colorscheme_flavor = "original"
 
 M.colorscheme = "catppuccin"
 -- M.colorscheme_flavor = "latte" -- ligth
 -- M.colorscheme_flavor = "frappe" -- dark low
--- M.colorscheme_flavor = "machiato" -- dark medium
+M.colorscheme_flavor = "macchiato" -- dark medium
 -- M.colorscheme_flavor = "mocha" -- dark high
 -- M.colorscheme_flavor = "gruvbox" -- custom
-M.colorscheme_flavor = "vscode-dark" -- custom
+-- M.colorscheme_flavor = "vscode-dark" -- custom
 
 -- M.colorscheme = "tokyonight"
 -- M.colorscheme_flavor = "night"
