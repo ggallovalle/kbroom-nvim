@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- code organization
+  - split setup in `init.lua` into its own files ([#1][i1])
 
 ## [Template]
 
@@ -275,4 +278,5 @@ LSP:
     Follow GitHub guide on [Removing sensitive data from a repository](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository) to remove large files.
 
 
+[i1]: https://github.com/ggallovalle/kbroom-nvim/issues/1
 [i33]: https://github.com/ggallovalle/kbroom-nvim/issues/33
