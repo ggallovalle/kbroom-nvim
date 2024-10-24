@@ -48,6 +48,23 @@ local Gruvbox = {
 }
 
 
+local VsCode = {
+  "Mofiqul/vscode.nvim",
+  main = "vscode",
+  lazy = false,
+  priority = 1000, --> Higher priority over other plugins
+  opts = {
+  },
+  config = function(spec, opts)
+    require(spec.main).setup(opts)
+
+    if settings.colorscheme == "vscode" then
+      vim.cmd.colorscheme("vscode")
+    end
+  end
+}
+
+
 local TokyoNight = {
   "folke/tokyonight.nvim",
   main = "tokyonight",
@@ -76,5 +93,6 @@ local TokyoNight = {
 return {
   Catppuccin,
   Gruvbox,
+  VsCode,
   TokyoNight,
 }
