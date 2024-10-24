@@ -65,6 +65,27 @@ local VsCode = {
 }
 
 
+local Github = {
+  url = "https://github.com/projekt0n/github-nvim-theme",
+  -- 2024-08-05
+  tag = "v1.1.2",
+  main = "github-theme",
+  lazy = false,
+  priority = 1000, --> Higher priority over other plugins
+  opts = {
+  },
+  config = function(spec, opts)
+    require(spec.main).setup(opts)
+
+    vim.api.nvim_del_user_command("GithubThemeInteractive")
+    vim.api.nvim_del_user_command("GithubThemeCompile")
+
+    if settings.colorscheme == "github" then
+      vim.cmd.colorscheme("github_" .. settings.colorscheme_flavor)
+    end
+  end
+}
+
 local TokyoNight = {
   "folke/tokyonight.nvim",
   main = "tokyonight",
@@ -94,5 +115,6 @@ return {
   Catppuccin,
   Gruvbox,
   VsCode,
+  Github,
   TokyoNight,
 }
