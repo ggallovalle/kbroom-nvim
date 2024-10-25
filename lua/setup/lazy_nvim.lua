@@ -1,7 +1,6 @@
 local M = {}
 
 function M.setup()
-    -- {{{ lazy.nvim
     -- Bootstrap lazy.nvim
     local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
     if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -22,7 +21,6 @@ function M.setup()
     -- Either pass the table (containing the plugin info) or string (a directory containing Lua modules)
     -- Following will import all Lua files in lua/plugins
     require("lazy").setup("plugins")
-    -- }}}
 end
 
 return M
