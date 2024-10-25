@@ -2,6 +2,18 @@
 
 ![theovim-banner](./assets/theovim-banner.jpg)
 
+## Installation
+
+> [!NOTE]
+> I highly recommend you to fork this repository and tweak settings on your own.
+
+```bash
+# Optional backup
+[[ -e ~/.config/nvim ]] && mv ~/.config/nvim ~/.config/nvim.bak
+# Install Theovim files in ~/.config/nvim
+git clone --depth 1 https://github.com/ggallovalle/kbroom-nvim.git ~/.config/nvim
+```
+
 ## Overview
 
 Theovim is my personal Neovim configuration, featuring a complete Telescope, Treesitter, and LSP setup, ~30 carefully selected plugins, and custom UI components in Lua.
@@ -27,18 +39,6 @@ Theovim:
 - `make` and some C compiler to compile `telescope-fzf-native.nvim`
 - `npm`, `g++` (`gcc-c++`), and `unzip` for some LSP servers
 - `git` to update Theovim
-
-## Installation
-
-> [!NOTE]
-> I highly recommend you to fork this repository and tweak settings on your own.
-
-```bash
-# Optional backup
-[[ -e ~/.config/nvim ]] && mv ~/.config/nvim ~/.config/nvim.bak
-# Install Theovim files in ~/.config/nvim
-git clone --depth 1 https://github.com/theopn/theovim.git ~/.config/nvim
-```
 
 ## Highlights
 
