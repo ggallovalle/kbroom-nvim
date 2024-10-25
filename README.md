@@ -2,17 +2,59 @@
 
 ![theovim-banner](./assets/theovim-banner.jpg)
 
-## Installation
+## Getting Started
 
 > [!NOTE]
 > I highly recommend you to fork this repository and tweak settings on your own.
 
 ```bash
+# MAC install nvim
+brew install neovim
+
 # Optional backup
 [[ -e ~/.config/nvim ]] && mv ~/.config/nvim ~/.config/nvim.bak
 # Install Theovim files in ~/.config/nvim
 git clone --depth 1 https://github.com/ggallovalle/kbroom-nvim.git ~/.config/nvim
+
+# Open nvim - current folder
+nvim
+# Open nvim - file
+nvim some/path/file.py
 ```
+
+Inside of neovim regular stuff
+
+
+* Hi, you are in __normal__ mode when you open neovim
+* Close noevim without saving the files
+  * `:qa!`
+* Close neovim saving all the files
+  * `:xa`
+* Enter __insert__ mode (write something)
+  * `i`
+* Exit __insert__ mode and get into <normal> mode (to navigate trough the file and project)
+  * press `<esc>`
+* in __normal__ mode, search for a file
+  * press `<space>sf`
+* in __normal__ mode, search for text in the current file
+  * press `/` then type what you are searching for
+
+
+Inside of neovim LSP interaction (to work with python, javascript, typescript, etc) files
+
+* a symbol is  any of the following elements (function, class, method, variable, constant, parameter, etc)
+* in __normal__ mode, go to definition (where the symbol is implemented)
+  * put cursor on a symbol and press `gd`
+* in __normal__ mode, go to declaration (where the symbol is imported in the current file)
+  * put cursor on a symbol and press `gD`
+* in __normal__ mode, go to references (where the symbol is used)
+  * put cursor on a symbol and press `gr`
+* in __normal__ mode, to see the type definition of a symbol
+  * put cursor on a symbol and press `<space>D`
+* in __normal__ mode, to search for a symbol in the current file
+  * press `<space>ds`
+* in __normal__ mode, to search for a symbol in the current workspace
+  * press `<space>ws`
 
 ## Overview
 
