@@ -1,9 +1,12 @@
 local LazyLoader = require("lazy.core.loader")
 local LazyConfig = require("lazy.core.config")
+local settings = require("settings")
+
+_G.S = settings
 
 ---Inspect it and return it
 ---@param it any
-function P(it)
+function _G.P(it)
   print(vim.inspect(it))
   return it
 end
@@ -17,7 +20,7 @@ end
 ---@param mod string
 ---@param opts table
 ---@return any
-function R(mod, opts)
+function _G.R(mod, opts)
   local plugin_ref = LazyConfig.plugins[mod]
   if plugin_ref ~= nil then
     -- print("reload with lazy")
@@ -52,6 +55,6 @@ function R(mod, opts)
   return mod_ref
 end
 
-local mount_n = 7
+local mount_n = 8
 
 return { mount = mount_n }

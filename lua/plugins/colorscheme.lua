@@ -86,6 +86,29 @@ local Github = {
   end
 }
 
+local OneDark = {
+  url = "https://github.com/navarasu/onedark.nvim",
+  -- 2024-07-05
+  commit = "fae34f7c635797f4bf62fb00e7d0516efa8abe37",
+  name = "onedark",
+  main = "onedark",
+  lazy = false,
+  priority = 1000, --> Higher priority over other plugins
+  opts = {
+  },
+  config = function(spec, opts)
+    if settings.colorscheme == "onedark" then
+      opts.style = settings.colorscheme_flavor
+    end
+
+    require(spec.main).setup(opts)
+    if settings.colorscheme == "onedark" then
+      vim.cmd.colorscheme("onedark")
+    end
+  end
+}
+
+
 local TokyoNight = {
   "folke/tokyonight.nvim",
   main = "tokyonight",
@@ -116,5 +139,6 @@ return {
   Gruvbox,
   VsCode,
   Github,
+  OneDark,
   TokyoNight,
 }

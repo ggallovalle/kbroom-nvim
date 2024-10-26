@@ -14,6 +14,14 @@ M.colorscheme_flavor = "dark_default" -- Github Web UI - Dark default
 -- M.colorscheme_flavor = "light_default" -- Github Web UI - Ligth default
 -- M.colorscheme_flavor = "light_high_contrast" -- Github Web UI - Light high contrast
 
+-- M.colorscheme = "onedark"
+-- M.colorscheme_flavor = "dark" -- default
+-- M.colorscheme_flavor = "darker"
+-- M.colorscheme_flavor = "cool"
+-- M.colorscheme_flavor = "deep"
+-- M.colorscheme_flavor = "warm"
+-- M.colorscheme_flavor = "warmer"
+-- M.colorscheme_flavor = "light"
 
 -- M.colorscheme = "catppuccin"
 -- M.colorscheme_flavor = "latte" -- ligth
