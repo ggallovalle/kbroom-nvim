@@ -109,8 +109,6 @@ M.config = function()
   -- Defines a list of servers and server-specific config
   local servers = {
     bashls = {},
-    clangd = {},
-    pylsp = {},
     texlab = {},
     -- html = { filetypes = { "html", "twig", "hbs"} },
 
