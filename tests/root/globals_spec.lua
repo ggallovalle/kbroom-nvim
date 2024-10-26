@@ -1,8 +1,11 @@
 local assert = require("luassert")
 local spy = require("luassert.spy")
 local match = require("luassert.match")
+local stub = require("tests.stubber").new()
 
-before_each(function ()
+stub.after_each()
+
+before_each(function()
   require("globals").deactivate()
 end)
 
@@ -48,13 +51,8 @@ end)
 
 it("_G.P(it)", function()
   -- given
-  local o_vim_inspect = vim.inspect
-  local s_vim_inspect = spy.new(function() end)
-  vim.inspect = s_vim_inspect
-  local o_G_print = print
-  local s_G_print = spy.new(function() end)
-  _G.print = s_G_print
-
+  local s_vim_inspect = stub.new(vim, "inspect")
+  local s_G_print = stub.new(_G, "print")
   local value_to_print = { name = "John", age = 10, speak = function() end }
 
   -- when
@@ -66,10 +64,6 @@ it("_G.P(it)", function()
   assert.spy(s_vim_inspect).called_with(value_to_print)
   assert.spy(s_G_print).called()
   assert.equals(actual, value_to_print)
-
-  -- cleanup
-  vim.inspect = o_vim_inspect
-  _G.print = o_G_print
 end)
 
 describe("_G.R(mod, opts)", function()
