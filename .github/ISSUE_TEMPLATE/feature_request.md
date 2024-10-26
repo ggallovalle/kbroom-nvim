@@ -11,10 +11,10 @@ assignees: ''
 
 What
 
+# Acceptance Criteria
+
+- [ ] how
+
 # Use Cases
 
 Why
-
-# Acceptance Critiria
-
-- [ ] how
