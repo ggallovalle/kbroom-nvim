@@ -5,6 +5,17 @@ local settings = require("settings")
 local M = {}
 local H = {}
 
+function M.setup()
+  _G.S = settings
+  _G.P = H.P
+  _G.R = H.R
+end
+
+function M.deactivate()
+  _G.S = nil
+  _G.P = nil
+  _G.R = nil
+end
 
 ---Inspect it and return it
 ---@param it any
@@ -13,22 +24,20 @@ function H.P(it)
   return it
 end
 
----Reload a plugin
+--- Reload a plugin
 ---
----It can be a
----1. Lazy registered plugin name
----2. a module that returns a `setup(opts)` and a optional `deactivate()` functions
----3. a module that would unloaded and required again
----@param mod string
----@param opts table
----@return any
+--- It can be a
+--- 1. Lazy registered plugin name
+--- 2. a module that returns a `setup(opts)` and a optional `deactivate()` functions
+--- 3. a module that would unloaded and required again
+--- @param mod string
+--- @param opts? table
+--- @return any
 function H.R(mod, opts)
   local plugin_ref = LazyConfig.plugins[mod]
   if plugin_ref ~= nil then
-    -- print("reload with lazy")
     LazyLoader.reload(plugin_ref)
     return require(LazyLoader.get_main(plugin_ref))
-    -- return
   end
 
   local ok, mod_ref = pcall(require, mod)
@@ -57,18 +66,5 @@ function H.R(mod, opts)
   return mod_ref
 end
 
-function M.setup()
-  _G.S = settings
-  _G.P = H.P
-  _G.R = H.R
-end
-
-function M.deactivate()
-  _G.S = nil
-  _G.P = nil
-  _G.R = nil
-end
-
-M.setup()
 
 return M

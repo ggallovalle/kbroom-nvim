@@ -11,3 +11,5 @@ require("lazy.minit").setup({
   },
 })
 
+require("globals").setup()
+require("tests.matchers").setup()

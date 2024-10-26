@@ -17,7 +17,7 @@ require("ui.dashboard").setup()
 -- }}}
 
 require("setup.neovide").setup()
-require("globals")
+require("globals").setup()
 
 -- vim: foldmethod=marker
 
