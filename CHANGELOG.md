@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - code organization
   - split setup in `init.lua` into its own files ([#1][i1])
+- user interface
+  - setup colorschemes
+    1. tokyonigth
+    2. gruvbox
+    3. onedark
+    4. nord
+    5. catppuccin
+    6. vscode
+    7. github
 
 ## [Template]
 
