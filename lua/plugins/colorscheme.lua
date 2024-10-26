@@ -17,7 +17,7 @@ local Catppuccin = {
     cat.flavours.gruvbox = 5
     cat.flavours["vscode-dark"] = 6
 
-    if settings.colorscheme == "catppuccin" then
+    if settings.colorscheme == spec.name then
       opts.flavour = settings.colorscheme_flavor
     end
 
@@ -25,7 +25,7 @@ local Catppuccin = {
     vim.api.nvim_del_user_command("Catppuccin")
     vim.api.nvim_del_user_command("CatppuccinCompile")
 
-    if settings.colorscheme == "catppuccin" then
+    if settings.colorscheme == spec.name then
       vim.cmd.colorscheme(settings.colorscheme)
     end
   end
@@ -34,6 +34,7 @@ local Catppuccin = {
 
 local Gruvbox = {
   "ellisonleao/gruvbox.nvim",
+  name = "gruvbox",
   main = "gruvbox",
   lazy = false,
   priority = 1000,
@@ -41,8 +42,8 @@ local Gruvbox = {
   config = function(spec, opts)
     require(spec.main).setup(opts)
 
-    if settings.colorscheme == "gruvbox" then
-      vim.cmd.colorscheme("gruvbox")
+    if settings.colorscheme == spec.name then
+      vim.cmd.colorscheme(spec.name)
     end
   end
 }
@@ -50,6 +51,7 @@ local Gruvbox = {
 
 local VsCode = {
   "Mofiqul/vscode.nvim",
+  name = "vscode",
   main = "vscode",
   lazy = false,
   priority = 1000, --> Higher priority over other plugins
@@ -58,8 +60,8 @@ local VsCode = {
   config = function(spec, opts)
     require(spec.main).setup(opts)
 
-    if settings.colorscheme == "vscode" then
-      vim.cmd.colorscheme("vscode")
+    if settings.colorscheme == spec.name then
+      vim.cmd.colorscheme(spec.name)
     end
   end
 }
@@ -97,13 +99,37 @@ local OneDark = {
   opts = {
   },
   config = function(spec, opts)
-    if settings.colorscheme == "onedark" then
+    if settings.colorscheme == spec.name then
       opts.style = settings.colorscheme_flavor
     end
 
     require(spec.main).setup(opts)
-    if settings.colorscheme == "onedark" then
-      vim.cmd.colorscheme("onedark")
+    if settings.colorscheme == spec.name then
+      vim.cmd.colorscheme(spec.name)
+    end
+  end
+}
+
+
+local Nord = {
+  url = "https://github.com/shaunsingh/nord.nvim",
+  -- 2023-12-19
+  commit = "80c1e5321505aeb22b7a9f23eb82f1e193c12470",
+  name = "nord",
+  main = "nord",
+  lazy = false,
+  priority = 1000, --> Higher priority over other plugins
+  opts = {
+  },
+  config = function(spec, opts)
+    vim.g.nord_borders = true
+    vim.g.nord_disable_background = false
+    vim.g.nord_italic = true
+    vim.g.nord_uniform_diff_background = true
+    vim.g.nord_bold = false
+
+    if settings.colorscheme == spec.name then
+      vim.cmd.colorscheme(spec.name)
     end
   end
 }
@@ -111,6 +137,7 @@ local OneDark = {
 
 local TokyoNight = {
   "folke/tokyonight.nvim",
+  name = "tokyonight",
   main = "tokyonight",
   lazy = false,
   priority = 1000, --> Higher priority over other plugins
@@ -128,7 +155,7 @@ local TokyoNight = {
   config = function(spec, opts)
     require(spec.main).setup(opts)
 
-    if settings.colorscheme == "tokyonight" then
+    if settings.colorscheme == spec.name then
       vim.cmd.colorscheme("tokyonight-" .. settings.colorscheme_flavor)
     end
   end,
@@ -140,5 +167,6 @@ return {
   VsCode,
   Github,
   OneDark,
+  Nord,
   TokyoNight,
 }
