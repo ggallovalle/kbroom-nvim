@@ -1,57 +1,37 @@
-local expect = require("luassert")
+local assert = require("luassert")
 local spy = require("luassert.spy")
+local match = require("luassert.match")
 
-after_each(function()
+before_each(function ()
   require("globals").deactivate()
-  package.loaded["globals"] = nil
 end)
 
 describe("globals module", function()
-  it("when required then adds to global", function()
-    -- given
-    expect.is_nil(_G.S)
-    expect.is_nil(_G.P)
-    expect.is_nil(_G.R)
-
-    -- when
-    require("globals")
-
-    -- then
-    expect.is_table(_G.S)
-    expect.is_function(_G.P)
-    expect.is_function(_G.R)
-  end)
-
   it("supports the setup protocol", function()
     -- given
-    expect.is_nil(_G.S)
-    expect.is_nil(_G.P)
-    expect.is_nil(_G.R)
+    assert.is_nil(_G.S)
+    assert.is_nil(_G.P)
+    assert.is_nil(_G.R)
 
     -- when
-    local sut = require("globals")
-    sut.deactivate()
-    sut.setup()
+    require("globals").setup()
 
     -- then
-    expect.is_table(_G.S)
-    expect.is_function(_G.P)
-    expect.is_function(_G.R)
+    assert.is_table(_G.S)
+    assert.is_function(_G.P)
+    assert.is_function(_G.R)
   end)
 
   it("supports the deactivate protocol", function()
     -- given
     local sut = require("globals")
-
-    -- when
+    sut.setup()
     sut.deactivate()
 
     -- then
-    expect.is_table(sut)
-    expect.is_function(sut.deactivate)
-    expect.is_nil(_G.S)
-    expect.is_nil(_G.P)
-    expect.is_nil(_G.R)
+    assert.is_nil(_G.S)
+    assert.is_nil(_G.P)
+    assert.is_nil(_G.R)
   end)
 end)
 
@@ -60,10 +40,10 @@ it([[_G.S == require("settings")]], function()
   local settings = require("settings")
 
   -- when
-  require("globals")
+  require("globals").setup()
 
   -- then
-  expect.equals(settings, S)
+  assert.equals(settings, S)
 end)
 
 it("_G.P(it)", function()
@@ -78,16 +58,53 @@ it("_G.P(it)", function()
   local value_to_print = { name = "John", age = 10, speak = function() end }
 
   -- when
-  require("globals")
-  expect.is_function(_G.P)
+  require("globals").setup()
+  assert.is_function(_G.P)
   local actual = _G.P(value_to_print)
 
   -- then
-  expect.spy(s_vim_inspect).was.called_with(value_to_print)
-  expect.spy(s_G_print).was.called()
-  expect.equals(actual, value_to_print)
+  assert.spy(s_vim_inspect).called_with(value_to_print)
+  assert.spy(s_G_print).called()
+  assert.equals(actual, value_to_print)
 
   -- cleanup
   vim.inspect = o_vim_inspect
   _G.print = o_G_print
+end)
+
+describe("_G.R(mod, opts)", function()
+  it("when is a lazy.nvim registred plugin it calls config on it", function()
+    -- given
+    local LazyConfig = require("lazy.core.config")
+    local plugin_name = "mini.test"
+    local sut = require(plugin_name)
+    local s_config = spy.new(function() end)
+    local minitest_spec = LazyConfig.plugins[plugin_name]
+    local opts = { hello = "world" }
+    minitest_spec.opts = opts
+    --- NOTE: it needs to be a function because lazy does 
+    ---   if type(spec.config) == "function" and the spy
+    ---   does not comply that contract
+    --- @type any
+    minitest_spec.config = function(spec, options)
+      s_config(spec, options)
+    end
+    minitest_spec.lazy = false
+
+    -- when
+    require("globals").setup()
+    local actual = R(plugin_name)
+
+    -- then
+    assert.same(vim.tbl_keys(sut), vim.tbl_keys(actual))
+    assert.spy(s_config).called_with(
+      match.tbl_get("name", plugin_name),
+      match.tbl_get("hello", opts.hello)
+    )
+
+    -- cleanup
+    minitest_spec.config = nil
+    minitest_spec.lazy = true
+    minitest_spec.opts = nil
+  end)
 end)
