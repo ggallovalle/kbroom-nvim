@@ -51,23 +51,6 @@ it([[_G.S == require("settings")]], function()
   assert.equals(settings, S)
 end)
 
-it("_G.P(it)", function()
-  -- given
-  local s_vim_inspect = stub.new(vim, "inspect")
-  local s_G_print = stub.new(_G, "print")
-  local value_to_print = { name = "John", age = 10, speak = function() end }
-
-  -- when
-  require("globals").setup()
-  assert.is_function(_G.P)
-  local actual = _G.P(value_to_print)
-
-  -- then
-  assert.spy(s_vim_inspect).called_with(value_to_print)
-  assert.spy(s_G_print).called()
-  assert.equals(actual, value_to_print)
-end)
-
 describe("_G.R(mod, opts)", function()
   it("when is a lazy.nvim registred plugin it calls config on it", function()
     -- given
