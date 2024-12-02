@@ -1,32 +1,45 @@
 local LazyLoader = require("lazy.core.loader")
 local LazyConfig = require("lazy.core.config")
-local settings = require("settings")
 
-_G.S = settings
+local M = {}
+local H = {}
 
----Inspect it and return it
----@param it any
-function _G.P(it)
-  print(vim.inspect(it))
-  return it
+M.deps = {
+  "settings"
+}
+
+function M.setup()
+  local settings = require("settings")
+  _G.S = settings
+  _G.P = H.P
+  _G.R = H.R
 end
 
----Reload a plugin
+function M.deactivate()
+  _G.S = nil
+  _G.P = nil
+  _G.R = nil
+end
+
+---Inspect it and return it
+function H.P(it)
+  return vim.print(it)
+end
+
+--- Reload a plugin
 ---
----It can be a
----1. Lazy registered plugin name
----2. a module that returns a `setup(opts)` and a optional `deactivate()` functions
----3. a module that would unloaded and required again
----@param mod string
----@param opts table
----@return any
-function _G.R(mod, opts)
+--- It can be a
+--- 1. Lazy registered plugin name
+--- 2. a module that returns a `setup(opts)` and a optional `deactivate()` functions
+--- 3. a module that would unloaded and required again
+--- @param mod string
+--- @param opts? table
+--- @return any
+function H.R(mod, opts)
   local plugin_ref = LazyConfig.plugins[mod]
   if plugin_ref ~= nil then
-    -- print("reload with lazy")
     LazyLoader.reload(plugin_ref)
     return require(LazyLoader.get_main(plugin_ref))
-    -- return
   end
 
   local ok, mod_ref = pcall(require, mod)
@@ -36,17 +49,30 @@ function _G.R(mod, opts)
   end
 
   local setup_ref = nil
+  local cleaned = false
 
-  if type(mod_ref.setup) == "function" then
-    if type(mod_ref.deactivate) == "function" then
+  if type(mod_ref.deps) == "table" then
+    for _, dep in ipairs(mod_ref.deps) do
+      H.R(dep)
+    end
+
+    ok, mod_ref = pcall(require, mod)
+    cleaned = true
+  end
+
+  if type(mod_ref.setup) ~= "nil" then
+    if type(mod_ref.deactivate) ~= "nil" then
       mod_ref.deactivate()
     end
 
     ok, setup_ref = pcall(mod_ref.setup, opts)
   end
 
-  package.loaded[mod] = nil
-  ok, mod_ref = pcall(require, mod)
+  if not cleaned then
+    package.loaded[mod] = nil
+    ok, mod_ref = pcall(require, mod)
+  end
+
 
   if setup_ref ~= nil then
     return setup_ref
@@ -55,6 +81,4 @@ function _G.R(mod, opts)
   return mod_ref
 end
 
-local mount_n = 8
-
-return { mount = mount_n }
+return M
