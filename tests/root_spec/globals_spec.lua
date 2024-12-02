@@ -3,10 +3,12 @@ local spy = require("luassert.spy")
 local match = require("luassert.match")
 local stub = require("tests.stubber").new()
 
-stub.after_each()
-
 before_each(function()
   require("globals").deactivate()
+end)
+
+after_each(function ()
+  stub.revert()
 end)
 
 describe("globals module", function()

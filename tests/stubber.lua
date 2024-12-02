@@ -9,12 +9,6 @@ function M.new()
   local q = {}
   q._len = 0
 
-  function this.after_each()
-    after_each(function()
-      this.revert()
-    end)
-  end
-
   function this.revert()
     while #q > 0 do
       local current = List.pop(q)

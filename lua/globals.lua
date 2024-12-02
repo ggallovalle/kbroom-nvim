@@ -1,11 +1,15 @@
 local LazyLoader = require("lazy.core.loader")
 local LazyConfig = require("lazy.core.config")
-local settings = require("settings")
 
 local M = {}
 local H = {}
 
+M.deps = {
+  "settings"
+}
+
 function M.setup()
+  local settings = require("settings")
   _G.S = settings
   _G.P = H.P
   _G.R = H.R
@@ -18,10 +22,8 @@ function M.deactivate()
 end
 
 ---Inspect it and return it
----@param it any
 function H.P(it)
-  print(vim.inspect(it))
-  return it
+  return vim.print(it)
 end
 
 --- Reload a plugin
@@ -47,17 +49,30 @@ function H.R(mod, opts)
   end
 
   local setup_ref = nil
+  local cleaned = false
 
-  if type(mod_ref.setup) == "function" then
-    if type(mod_ref.deactivate) == "function" then
+  if type(mod_ref.deps) == "table" then
+    for _, dep in ipairs(mod_ref.deps) do
+      H.R(dep)
+    end
+
+    ok, mod_ref = pcall(require, mod)
+    cleaned = true
+  end
+
+  if type(mod_ref.setup) ~= "nil" then
+    if type(mod_ref.deactivate) ~= "nil" then
       mod_ref.deactivate()
     end
 
     ok, setup_ref = pcall(mod_ref.setup, opts)
   end
 
-  package.loaded[mod] = nil
-  ok, mod_ref = pcall(require, mod)
+  if not cleaned then
+    package.loaded[mod] = nil
+    ok, mod_ref = pcall(require, mod)
+  end
+
 
   if setup_ref ~= nil then
     return setup_ref
@@ -65,6 +80,5 @@ function H.R(mod, opts)
 
   return mod_ref
 end
-
 
 return M
