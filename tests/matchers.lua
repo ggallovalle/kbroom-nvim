@@ -6,7 +6,7 @@ local M = {}
 local H = {}
 
 function M.setup()
-  assert:register("matcher", "test", H.is_test)
+  assert:register("matcher", "satisfies", H.satisfies)
   assert:register("matcher", "tbl_get", H.tbl_get)
 end
 
@@ -15,7 +15,7 @@ function M.deactivate()
   assert:unregister("matcher", "tbl_get")
 end
 
-function H.is_test(_, arguments)
+function H.satisfies(_, arguments)
   local test = arguments[1]
   return function(value)
     return test(value) == true
@@ -32,13 +32,13 @@ function H.tbl_get(_, arguments, level)
     s("assertion.internal.badargtype", { 1, "tbl_get", "str | str[]", path_type }), level)
 
   if type(path) == "string" then
-    path = H.split_by_dot(path)
+    path = { path }
   end
 
   local matcher = arguments[2]
   -- default to equal for simplicity
   if not match.is_matcher(matcher) then
-    matcher = match.equal(matcher)
+    matcher = match.is_equal(matcher)
   end
 
   assert(match.is_matcher(matcher),
@@ -49,14 +49,6 @@ function H.tbl_get(_, arguments, level)
     local actual = matcher(v)
     return actual ~= false and actual ~= nil
   end
-end
-
-function H.split_by_dot(input)
-  local result = {}
-  for part in string.gmatch(input, "[^%.]+") do
-    table.insert(result, part)
-  end
-  return result
 end
 
 return M
