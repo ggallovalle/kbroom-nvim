@@ -24,3 +24,11 @@ $ mask test
 # Run an specific test
 $ mask test tests/root_spec/filename_spec.lua
 ```
+
+How to debug tests?
+[Docs Debugger.lua](https://github.com/slembcke/debugger.lua)
+
+```lua
+local dbg = require("debugger")
+dbg()
+```
