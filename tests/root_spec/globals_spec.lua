@@ -1,14 +1,9 @@
 local assert = require("luassert")
 local spy = require("luassert.spy")
 local match = require("luassert.match")
-local stub = require("tests.stubber").new()
 
 before_each(function()
   require("globals").deactivate()
-end)
-
-after_each(function ()
-  stub.revert()
 end)
 
 describe("globals module", function()
@@ -48,7 +43,7 @@ it([[_G.S == require("settings")]], function()
   require("globals").setup()
 
   -- then
-  assert.equals(settings, S)
+  assert.is_equal(settings, S)
 end)
 
 describe("_G.R(mod, opts)", function()
@@ -75,10 +70,10 @@ describe("_G.R(mod, opts)", function()
     local actual = R(plugin_name)
 
     -- then
-    assert.same(vim.tbl_keys(sut), vim.tbl_keys(actual))
-    assert.spy(s_config).called_with(
-      match.tbl_get("name", plugin_name),
-      match.tbl_get("hello", opts.hello)
+    assert.is_same(vim.tbl_keys(sut), vim.tbl_keys(actual))
+    assert.spy(s_config).is_called_with(
+      match.is_tbl_get("name", plugin_name),
+      match.is_tbl_get("hello", opts.hello)
     )
 
     -- cleanup
