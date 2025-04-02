@@ -82,7 +82,7 @@ local logos = {
   }
 }
 
-local logo = logos[math.random(#olivers)]
+local logo = logos[math.random(#logos)]
 
 -- Calculating max width and make an empty length of the max width
 local max_width = #header[1]
