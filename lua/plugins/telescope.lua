@@ -15,7 +15,7 @@ local M = { "nvim-telescope/telescope.nvim" }
 
 M.event = "VimEnter"
 
-M.branch = "0.1.x"
+-- M.branch = "0.1.x"
 
 M.dependencies = {
   "nvim-lua/plenary.nvim",                      --> Lua function library for Neovim
