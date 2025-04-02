@@ -162,7 +162,7 @@ Initialization - ftplugins                            *theovim-init-ftplugins*
 
 Theovim uses them to control:
 - Indentation settings
-- Coding style settings (|'colorcolumn'|, |textwidth|)
+- Coding style settings (|'colorcolumn'|)
 - Command to (compile) and execute the current file using a stadard tool
 - Spell check
 
@@ -174,8 +174,6 @@ For example, the following is the content of `python.vim`:
   setlocal expandtab tabstop=4 softtabstop=4 shiftwidth=4
   " Bar at the 80th column
   setlocal colorcolumn=80
-  " Break line at the 79th char
-  setlocal textwidth=79
   " Commnd to run the current file
   command RunPython !python3 %:p
 <

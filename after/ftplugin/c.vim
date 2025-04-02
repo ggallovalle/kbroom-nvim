@@ -4,7 +4,7 @@
 " Last Change:	2023-10-15
 
 setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
-setlocal colorcolumn=80 textwidth=79
+setlocal colorcolumn=80
 setlocal matchpairs+==:;
 
 " This command is to compile and run a single C file using gcc.
