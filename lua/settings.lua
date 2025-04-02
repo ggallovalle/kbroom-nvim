@@ -2,15 +2,15 @@ local M = {}
 
 M.colorscheme_is_transparent = false
 
--- M.colorscheme = "gruvbox"
+M.colorscheme = "gruvbox"
 
 -- M.colorscheme = "vscode"
 
 -- M.colorscheme = "nord"
 
 -- [https://github.com/settings/appearance]
-M.colorscheme = "github"
-M.colorscheme_flavor = "dark_default" -- Github Web UI - Dark default
+-- M.colorscheme = "github"
+-- M.colorscheme_flavor = "dark_default" -- Github Web UI - Dark default
 -- M.colorscheme_flavor = "dark_dimmed" -- Github Web UI - Dark dimmed
 -- M.colorscheme_flavor = "dark_high_contrast" -- Github Web UI - Dark high contrast
 -- M.colorscheme_flavor = "light_default" -- Github Web UI - Ligth default

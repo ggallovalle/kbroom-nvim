@@ -59,13 +59,30 @@ local olivers = {
 math.randomseed(os.time())
 local header = olivers[math.random(#olivers)]
 
-local logo = {
-  [[ ___                    ]],
-  [[  | |_  _  _     o __   ]],
-  [[  | | |(/_(_)\_/ | |||  ]],
-  "",
-  os.date("[ ━━%m-%d━━ ❖ ━━%H:%M━━ ]"),
+local footer = os.date("[ ━━%m-%d━━ ❖ ━━%H:%M━━ ]")
+local logos = {
+  -- fourstops
+  {
+    [[ | /|~~\                   ]],
+    [[ |( |--<|/~\/~\/~\|/~\ /~\ ]],
+    [[ | \|__/|   \_/\_/|   |   |]],
+    "",
+    footer
+  },
+  -- doom
+  {
+    [[  _   ________                            ]],
+    [[ | | / /| ___ \                           ]],
+    [[ | |/ / | |_/ /_ __ ___   ___  _ __ ___   ]],
+    [[ |    \ | ___ \ '__/ _ \ / _ \| '_ ` _ \ ]],
+    [[ | |\  \| |_/ / | | (_) | (_) | | | | | | ]],
+    [[ \_| \_/\____/|_|  \___/ \___/|_| |_| |_| ]],
+    "",
+    footer
+  }
 }
+
+local logo = logos[math.random(#olivers)]
 
 -- Calculating max width and make an empty length of the max width
 local max_width = #header[1]
