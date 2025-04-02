@@ -22,7 +22,7 @@ local NeoGit = {
   name = "neogit",
   main = "neogit",
   dependencies = {
-    "nvim-telescope/telescope.nvim", 
+    "nvim-telescope/telescope.nvim",
   },
   opts = {
     integrations = {
