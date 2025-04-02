@@ -17,7 +17,7 @@
 local M = {}
 local fn = vim.fn
 
-local theovimlogo = vim.g.have_nerd_font and "Theo  " or "Theovim"
+local theovimlogo = vim.g.have_nerd_font and "Kbroom  " or "Kbroomvim"
 
 --- Returns the Lua list of listed buffers
 ---@return table listed_buf list of buffers that are loaded, valid, and listed

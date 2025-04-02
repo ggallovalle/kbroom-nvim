@@ -11,7 +11,6 @@ require("setup.diagnostic").setup()
 require("setup.lazy_nvim").setup()
 
 -- {{{ UI module calls
-require("ui.statusline").setup()
 require("ui.tabline").setup()
 require("ui.dashboard").setup()
 -- }}}
