@@ -2,6 +2,7 @@ local builtin = require("telescope.builtin")
 
 local M = {}
 
+-- NOTE: this doesn't work, the api for builtin.quickfix is different than expected
 M.diagnostics_with_sources = function()
     local diagnostics = vim.diagnostic.get(0)
     local results = {}

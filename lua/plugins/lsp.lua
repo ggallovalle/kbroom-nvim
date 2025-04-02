@@ -14,6 +14,7 @@ H.config_mason = function()
     -- html = { filetypes = { "html", "twig", "hbs"} },
     -- python
     basedpyright = {},
+    ruff = {},
     -- typescript
     ts_ls = {
       init_options = {
