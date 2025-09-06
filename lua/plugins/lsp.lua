@@ -33,7 +33,8 @@ H.config_mason = function()
       },
     },
     -- vuejs
-    volar = {},
+    -- @deprecated
+    -- volar = {},
 
     lua_ls = {
       settings = {
@@ -42,6 +43,9 @@ H.config_mason = function()
         },
       },
     },
+
+    -- php
+    phpactor = {},
   }
 
   -- Calls mason-lspconfig to

@@ -16,9 +16,14 @@ local always_hidden = {
 }
 
 return {
-  "stevearc/oil.nvim",
+  url = "https://github.com/stevearc/oil.nvim",
+  -- 2025-02-15
+  tag = "v2.15.0",
   dependencies = {
     { "nvim-tree/nvim-web-devicons" },
+  },
+  keys = {
+    { "<leader>fo", "<cmd>Oil --preview <cr>", desc = "[File] [O]il" },
   },
   opts = {
     default_file_explorer = false, --> do not hijack netrw

@@ -57,7 +57,7 @@ M.config = function()
 
   -- Set [S]earch keymaps
   local builtin = require("telescope.builtin")
----@diagnostic disable-next-line: different-requires
+  ---@diagnostic disable-next-line: different-requires
   local extensions = require("extensions.telescope")
 
   vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
@@ -90,7 +90,10 @@ M.config = function()
   end, { desc = "[S]earch [N]eovim files" })
 
   -- Set Git keymaps
-  vim.keymap.set("n", "<leader>gf", builtin.git_files, { desc = "Search [G]it [F]iles" })
+  vim.keymap.set("n", "<leader>gf",
+    function() builtin.git_files({ show_untracked = true }) end,
+    { desc = "Search [G]it [F]iles" }
+  )
   vim.keymap.set("n", "<leader>gc", builtin.git_commits, { desc = "Search [G]it [C]ommits" })
   vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Search [G]it [S]tatus" })
 

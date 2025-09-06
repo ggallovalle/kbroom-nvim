@@ -6,7 +6,8 @@ require("setup.options").setup()
 require("setup.keymap").setup()
 require("setup.user_command").setup()
 require("setup.autocmd").setup()
-require("setup.netrw").setup()
+-- TODO: add lazy keymap
+-- require("setup.netrw").setup() -- -> prefer oil.nvim
 require("setup.diagnostic").setup()
 require("setup.lazy_nvim").setup()
 
