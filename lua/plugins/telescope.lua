@@ -11,7 +11,11 @@
 ---@require C compiler
 ---@require Make
 
-local M = { "nvim-telescope/telescope.nvim" }
+local M = {   
+  url = "https://github.com/nvim-telescope/telescope.nvim",
+  -- 2024-05-24
+  tag = "0.1.8",
+}
 
 M.event = "VimEnter"
 

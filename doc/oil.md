@@ -20,3 +20,4 @@ A file explorer that lets you edit your filesystem like a normal Neovim buffer.
 - `-` go to parent folder 
 - `_` go to neovim current working directory
 - `g.` toggle showing hidden files
+

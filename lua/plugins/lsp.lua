@@ -46,6 +46,9 @@ H.config_mason = function()
 
     -- php
     phpactor = {},
+
+    -- rust
+    rust_analyzer = {},
   }
 
   -- Calls mason-lspconfig to
@@ -80,6 +83,14 @@ M.dependencies = {
   },
   { 'Bilal2453/luvit-meta', lazy = true }, --> vim.uv support
   { "SmiteshP/nvim-navic",  lazy = true }, --> status line to show the current context based on LSP
+  {
+    -- php stuff
+    url = 'https://github.com/phpactor/phpactor',
+    tag = '2025.07.25.0',
+    ft = 'php',
+    tag = '*',
+    build = 'composer install --no-dev --optimize-autoloader',
+  }
 }
 
 M.config = function()
