@@ -30,6 +30,6 @@ local GithubCopilotChat = {
 }
 
 return {
-    GithubCopilot,
-    GithubCopilotChat,
+    -- GithubCopilot,
+    -- GithubCopilotChat,
 }
