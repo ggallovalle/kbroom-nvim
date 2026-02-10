@@ -5,7 +5,17 @@ local H = {}
 H.config_mason = function()
   -- Calls Mason
   require("mason").setup()
-  local cmd_npm = require("kbroom.cmd.npm")
+  -- local cmd_npm = require("kbroom.cmd.npm")
+
+  local vue_language_server_path = vim.fn.stdpath('data') ..
+      "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+  local tsserver_filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' }
+  local vue_plugin = {
+    name = '@vue/typescript-plugin',
+    location = vue_language_server_path,
+    languages = { 'vue' },
+    configNamespace = 'typescript',
+  }
 
   -- Defines a list of servers and server-specific config
   local servers = {
@@ -19,23 +29,12 @@ H.config_mason = function()
     ts_ls = {
       init_options = {
         plugins = {
-          {
-            name = "@vue/typescript-plugin",
-            location = cmd_npm.package_path("@vue/typescript-plugin", { global = true }),
-            languages = { "javascript", "typescript", "vue" },
-          },
+          vue_plugin,
         },
       },
-      filetypes = {
-        "javascript",
-        "typescript",
-        "vue",
-      },
+      filetypes = tsserver_filetypes,
     },
-    -- vuejs
-    -- @deprecated
-    -- volar = {},
-
+    vue_ls = {},
     lua_ls = {
       settings = {
         Lua = {
@@ -51,20 +50,16 @@ H.config_mason = function()
     rust_analyzer = {},
   }
 
+
+  for server, config in pairs(servers) do
+    vim.lsp.config(server, config)
+  end
+
   -- Calls mason-lspconfig to
   -- 1. ensure servers are installed
-  -- 2. Set up handlers for each server using the `server` table
   require("mason-lspconfig").setup({
     ensure_installed = vim.tbl_keys(servers or {}),
-    -- Separate setup_handlers() function could be used for the same purpose.
-    -- Read |mason-lspconfig.setup_handlers()| for more information
-    handlers = {
-      function(server_name)
-        -- Uses default server config (`{}`) or server-specific config from `server` table
-        local server = servers[server_name] or {}
-        require("lspconfig")[server_name].setup(server)
-      end
-    }
+    automatic_enable = true,
   })
 end
 
