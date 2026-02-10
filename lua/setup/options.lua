@@ -5,10 +5,34 @@ function M.setup()
   -- https://neovim.io/doc/user/vim_diff.html#nvim-defaults
 
   -- Tab
-  vim.opt.softtabstop    = 0    --> How many chracters the /cursor moves/ with <TAB> and <BS> -- 0 to disable
-  vim.opt.expandtab      = true --> Use space instead of tab
-  vim.opt.shiftwidth     = 2    --> Number of spaces to use for auto-indentation, <<, >>, etc.
-  vim.opt.shiftround     = true --> Make the indentation to a multiple of shiftwidth when using < or >
+  vim.opt.softtabstop = 0       --> How many chracters the /cursor moves/ with <TAB> and <BS> -- 0 to disable
+  vim.opt.expandtab   = true    --> Use space instead of tab
+  vim.opt.shiftwidth  = 2       --> Number of spaces to use for auto-indentation, <<, >>, etc.
+  vim.opt.shiftround  = true    --> Make the indentation to a multiple of shiftwidth when using < or >
+  vim.g.clipboard = {
+  name = "win32yank",
+  copy = {
+    ["+"] = "win32yank -i --crlf",
+    ["*"] = "win32yank -i --crlf",
+  },
+  paste = {
+    ["+"] = "win32yank -o --lf",
+    ["*"] = "win32yank -o --lf",
+  },
+  cache_enabled = 0,
+}
+  -- vim.g.clipboard     = {
+  --   name = "clip",
+  --   copy = {
+  --     ["+"] = "clip.exe",
+  --     ["*"] = "clip.exe",
+  --   },
+  --   paste = {
+  --     ["+"] = "powershell.exe -Command Get-Clipboard",
+  --     ["*"] = "powershell.exe -Command Get-Clipboard",
+  --   },
+  --   cache_enabled = 0,
+  -- }
 
   -- Location in the buffer
   vim.opt.number         = true
