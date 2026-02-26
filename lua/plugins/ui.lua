@@ -1,6 +1,6 @@
 local H = {}
 
-H.first_str = function (value)
+H.first_str = function(value)
   return value:sub(1, 1)
 end
 
@@ -30,6 +30,9 @@ local Lualine = {
   end
 }
 
+
 return {
-  Lualine
+  Lualine,
+  TsComments,
 }
+
