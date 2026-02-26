@@ -1,7 +1,6 @@
 return {
-  "iamcco/markdown-preview.nvim",
-  build = function()
-    vim.fn["mkdp#util#install"]()
-  end,
-  ft = { "markdown" }
+  'MeanderingProgrammer/render-markdown.nvim',
+  ---@module 'render-markdown'
+  ---@type render.md.UserConfig
+  opts = {},
 }

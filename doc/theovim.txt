@@ -45,7 +45,6 @@ Plugins:
 - Netrw is a decoration, use Oil.nvim to manage files
 - `<leader>gd` opens a diff view for a Git file
 - If you forgot a keymap, use `:WhichKey`
-- Use `:MarkdownPreviewToggle` and `:VimtexCompile`
 
 Telescope:
 - `<leader><leader>`: Open buffers
