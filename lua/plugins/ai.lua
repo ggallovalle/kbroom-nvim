@@ -1,35 +1,49 @@
-local GithubCopilot = {
-    "github/copilot.vim",
+---@type LazyPluginSpec[]
+local plugins = {}
+
+---@type LazyPluginSpec
+local Plenary = {
+  url = "https://github.com/nvim-lua/plenary.nvim.git",
+  -- commit b9fd522 (date unknown, from lazy-lock) https://github.com/nvim-lua/plenary.nvim/commit/b9fd5226c2f76c951fc8ed5923d85e4de065e509
+  commit = "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
 }
 
-local GithubCopilotChat = {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    dependencies = {
-        { "github/copilot.vim" },                       -- or zbirenbaum/copilot.lua
-        { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-    },
-    build = "make tiktoken",                            -- Only on MacOS or Linux
-    opts = {
-        -- See Configuration section for options
-        --   -- default window options
-        window = {
-            layout = 'vertical',  -- 'vertical', 'horizontal', 'float', 'replace'
-            width = 0.3,          -- fractional width of parent, or absolute width in columns when > 1
-            height = 0.5,         -- fractional height of parent, or absolute height in rows when > 1
-            -- Options below only apply to floating windows
-            relative = 'editor',  -- 'editor', 'win', 'cursor', 'mouse'
-            border = 'single',    -- 'none', single', 'double', 'rounded', 'solid', 'shadow'
-            row = nil,            -- row position of the window, default is centered
-            col = nil,            -- column position of the window, default is centered
-            title = 'Copilot Chat', -- title of chat window
-            footer = nil,         -- footer of chat window
-            zindex = 1,           -- determines if window is on top or below other floating windows
-        },
-    },
-    -- See Commands section for default commands if you want to lazy load on them
+---@type LazyPluginSpec
+local CopilotVim = {
+  url = "https://github.com/github/copilot.vim.git",
+  -- tag v1.58.0 (2025-12-24) https://github.com/github/copilot.vim/releases/tag/v1.58.0
+  tag = "v1.58.0",
 }
 
-return {
-    -- GithubCopilot,
-    -- GithubCopilotChat,
+---@type LazyPluginSpec
+local CopilotChat = {
+  url = "https://github.com/CopilotC-Nvim/CopilotChat.nvim.git",
+  -- tag v4.7.4 (2025-10-01) https://github.com/CopilotC-Nvim/CopilotChat.nvim/releases/tag/v4.7.4
+  tag = "v4.7.4",
+  dependencies = {
+    CopilotVim,                      -- copilot core
+    Plenary,                         -- curl/log/async helpers
+  },
+  build = "make tiktoken",           -- Only on MacOS or Linux
+  opts = function()
+    return {
+      window = {
+        layout = 'vertical',
+        width = 0.3,
+        height = 0.5,
+        relative = 'editor',
+        border = 'single',
+        row = nil,
+        col = nil,
+        title = 'Copilot Chat',
+        footer = nil,
+        zindex = 1,
+      },
+    }
+  end,
 }
+
+plugins[#plugins + 1] = CopilotVim
+plugins[#plugins + 1] = CopilotChat
+
+return plugins

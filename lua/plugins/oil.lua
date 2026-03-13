@@ -15,27 +15,40 @@ local always_hidden = {
   "__pycache__"
 }
 
-return {
-  url = "https://github.com/stevearc/oil.nvim",
-  -- 2025-02-15
-  tag = "v2.15.0",
-  dependencies = {
-    { "nvim-tree/nvim-web-devicons" },
-  },
+---@type LazyPluginSpec[]
+local plugins = {}
+
+---@type LazyPluginSpec
+local Devicons = {
+  url = "https://github.com/nvim-tree/nvim-web-devicons.git",
+  -- commit 746ffbb (date unknown, from lazy-lock) https://github.com/nvim-tree/nvim-web-devicons/commit/746ffbb17975ebd6c40142362eee1b0249969c5c
+  commit = "746ffbb17975ebd6c40142362eee1b0249969c5c",
+}
+
+---@type LazyPluginSpec
+local Oil = {
+  url = "https://github.com/stevearc/oil.nvim.git",
+  -- commit 975a77c (date unknown, from lazy-lock) https://github.com/stevearc/oil.nvim/commit/975a77cce3c8cb742bc1b3629f4328f5ca977dad
+  commit = "975a77cce3c8cb742bc1b3629f4328f5ca977dad",
+  dependencies = { Devicons },
   keys = {
     { "<leader>fo", "<cmd>Oil --preview <cr>", desc = "[File] [O]il" },
   },
-  opts = {
-    default_file_explorer = false, --> do not hijack netrw
-    view_options = {
-      -- This function defines what is considered a "hidden" file
-      is_hidden_file = function(name, bufnr)
-        return contains(hidden, name, vim.startswith)
-      end,
-      -- This function defines what will never be shown, even when `show_hidden` is set
-      is_always_hidden = function(name, bufnr)
-        return contains(always_hidden, name, vim.startswith)
-      end,
+  opts = function()
+    return {
+      default_file_explorer = false, --> do not hijack netrw
+      view_options = {
+        is_hidden_file = function(name, _)
+          return contains(hidden, name, vim.startswith)
+        end,
+        is_always_hidden = function(name, _)
+          return contains(always_hidden, name, vim.startswith)
+        end,
+      },
     }
-  },
+  end,
 }
+
+plugins[#plugins + 1] = Oil
+
+return plugins
