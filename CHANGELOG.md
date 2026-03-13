@@ -172,9 +172,9 @@ Below is the list of options, keybindings, Lua functions, plugins, and other Neo
     end
     vim.api.nvim_create_user_command("Weather", weather_popup, { nargs = '?' }) --> ?: 0 or 1, *: > 0, +: > 1 args
     ```
-- `:TheovimUpdate`: It was a combination of `vim.fn.termopen("cd" .. vim.opt.runtimepath:get()[1] .. " && git pull")`, `:Lazy update`, `:TSUpdate`, and `:MasonUpdate`.
+- `:KBroomUpdate`: It was a combination of `vim.fn.termopen("cd" .. vim.opt.runtimepath:get()[1] .. " && git pull")`, `:Lazy update`, `:TSUpdate`, and `:MasonUpdate`.
     It was too complex.
-- `:TheovimReadme` and other family of displaying a markdown file in a floating window: I wrote 800 lines of help document in Vim's built-in help syntax.
+- `:KBroomReadme` and other family of displaying a markdown file in a floating window: I wrote 800 lines of help document in Vim's built-in help syntax.
     ```lua
     Util.spawn_floting_doc_win = function(file_path)
       local win_height = vim.api.nvim_win_get_height(0) or vim.o.lines
@@ -220,7 +220,7 @@ Below is the list of options, keybindings, Lua functions, plugins, and other Neo
 
     local readme_path = vim.api.nvim_get_runtime_file("README.md", false)[1]
     local helpdoc_func = Util.spawn_floting_doc_win(readme_path)
-    vim.api.nvim_create_user_command("TheovimReadme", helpdoc_func, { nargs = 0 })
+    vim.api.nvim_create_user_command("KBroomReadme", helpdoc_func, { nargs = 0 })
     ```
 - Simulating `gx` keybinding: It was useful when Netrw was disabled for nvim-tree.
     ```lua
@@ -281,7 +281,7 @@ LSP:
 
 ## File Organization
 
-- Cloning config as `~/.theovim` and creating symlink at `~/.config/nvim`: It was as stupid as it sounds
+- Cloning config as `~/.kbroom` and creating symlink at `~/.config/nvim`: It was as stupid as it sounds
 - Uploading binary files (images) to the repository: Git is a **version control system**!!
     At one point, my repository grew up to 14MB when it is just ~2000 lines of Lua code and plain text files.
     Follow GitHub guide on [Removing sensitive data from a repository](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository) to remove large files.

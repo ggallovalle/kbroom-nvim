@@ -1,13 +1,6 @@
---- *tabline.lua* Theovim Tabline
---- $ figlet -f tinker-joy theovim
----  o  o
----  |  |                  o
---- -o- O--o o-o o-o o   o   o-O-o
----  |  |  | |-' | |  \ /  | | | |
----  o  o  o o-o o-o   o   | o o o
----
+--- *tabline.lua* KBroom Tabline
 --- Initialize tabline with:
---- - Theovim logo
+--- - KBroom logo
 --- - Clickable tabs
 --- - Number of window iff there is more than one
 --- - Clickable close button that changes when curr buf is modified
@@ -17,7 +10,7 @@
 local M = {}
 local fn = vim.fn
 
-local theovimlogo = vim.g.have_nerd_font and "Kbroom  " or "Kbroomvim"
+local kbroom_logo = vim.g.have_nerd_font and "KBroom  " or "KBroomvim"
 
 --- Returns the Lua list of listed buffers
 ---@return table listed_buf list of buffers that are loaded, valid, and listed
@@ -38,7 +31,7 @@ end
 --- @return string s Formatted string to be used as a Vim tabline
 M.build = function()
   -- Init + %< to have truncation start after the logo
-  local s = "%#TabLineFill#" .. theovimlogo .. " %<"
+  local s = "%#TabLineFill#" .. kbroom_logo .. " %<"
 
   local curr_tabnum = fn.tabpagenr()
   for i = 1, fn.tabpagenr("$") do

@@ -37,7 +37,7 @@ function M.setup()
   vim.keymap.set("x", "<leader>y", '"+y', { desc = "[Y]ank to the system clipboard (+)" })
   vim.keymap.set("n",
     "<leader>p",
-    ":echo '[Theovim] e.g.: `:normal \"3p` to paste the content of the register 3'<CR>" .. ':reg<CR>:normal "',
+    ":echo '[KBroom] e.g.: `:normal \"3p` to paste the content of the register 3'<CR>" .. ':reg<CR>:normal "',
     { silent = true, desc = "[P]aste from one of the registers" })
   vim.keymap.set("x",
     "<leader>p",
@@ -49,11 +49,11 @@ function M.setup()
   vim.keymap.set("n", "]b", "<CMD>bnext<CR>", { desc = "Go to next [B]uffer" })
   vim.keymap.set("n",
     "<leader>b",
-    ":echo '[Theovim] Choose a buffer'<CR>" .. ":ls<CR>" .. ":b<SPACE>",
+    ":echo '[KBroom] Choose a buffer'<CR>" .. ":ls<CR>" .. ":b<SPACE>",
     { silent = true, desc = "Open [B]uffer list" })
   vim.keymap.set("n",
     "<leader>k",
-    ":echo '[Theovim] Choose a buf to delete (blank to choose curr)'<CR>" .. ":ls<CR>" .. ":bdelete<SPACE>",
+    ":echo '[KBroom] Choose a buf to delete (blank to choose curr)'<CR>" .. ":ls<CR>" .. ":bdelete<SPACE>",
     { silent = true, desc = "[K]ill a buffer" })
 
   -- Terminal

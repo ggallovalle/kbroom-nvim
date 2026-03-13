@@ -1,21 +1,23 @@
-*theovim.txt*             Theo's Neovim Configuration
-*theovim*
+*kbroom.txt*             KBroom Neovim Configuration
+*kbroom*
 
-                                \/       \/          ~
-                                /\_______/\          ~
-                               /   o   o   \         ~
-                              (  ==  ^  ==  )        ~
-                               )           (         ~
-                              (             )        ~
-                              ( (  )   (  ) )        ~
-                             (__(__)___(__)__)       ~
-                            ___                      ~
-                             | |_  _  _     o __     ~
-                             | | |(/_(_)\_/ | |||    ~
+            *    *      *     *   *     *
+  _  __ ___                        ___
+ | |/ // _ ) ___ ___  ___  _ __   / _ \
+ |   / / _  |/ -_) _ \/ _ \| '  \ / , _/
+ |_|_\\ /____/\__/\___/\___/|_|_|_|/_/|_|
+                 KBroom — built for snow days
+            *    *      *     *   *     *
+
+                                / \__                ~
+                              (    @\___             ~
+                              /         O            ~
+                             /   (_____ /            ~
+                            /_____/     U            ~
 
 ==============================================================================
 
-Welcome back Theo, what did you forget this time?
+Welcome back KBroom, what did you forget this time?
 
 - Type |gO| to see the table of contents
 - Use |K| (or |CTRL-]|) to jump to the tag under cursor, |CTRL-T| to comeback
@@ -25,7 +27,7 @@ Welcome back Theo, what did you forget this time?
     https://vim.rtorr.com/
 
 ==============================================================================
-Tl;dr                                                           *theovim-tldr*
+Tl;dr                                                           *kbroom-tldr*
 
 Housekeeping:
 - |:checkhealth| to see if you are missing any runtime files
@@ -69,11 +71,11 @@ Documentation:
 - `K` to jump into a tag, `<C-t>` to come back
 
 ==============================================================================
-Initialization - Options                                *theovim-init-options*
+Initialization - Options                                *kbroom-init-options*
 
-Theovim creates a solid base Neovim experience by maximizing built-in
+KBroom creates a solid base Neovim experience by maximizing built-in
 features.
-This section discusses some of the notable Neovim settings in Theovim.
+This section discusses some of the notable Neovim settings in KBroom.
 Read `init.lua` for the complete list of options.
 
 Tab/Indentation:
@@ -89,11 +91,11 @@ By default,
 - Read the below section for how <Tab> and indentation spaces are rendered
 
 For certain filetypes, indentation settings are handled by |ftplugin|.
-See |theovim-ftplugin| for more information.
+See |kbroom-ftplugin| for more information.
 
 See also:
 - |'tabstop'| documentation outlines four main ways to configure tab in Vim.
-  Theovim uses the number 2. Tab lovers will like number 1.
+  KBroom uses the number 2. Tab lovers will like number 1.
 
 Character rendering:
 >
@@ -112,13 +114,13 @@ Character rendering:
 <
 Note that |lcs-leadmultispace| (indentation guide for space-base indentations)
 change dynamically based on |'shiftwidth'| value.
-See |theovim-core-autocmds| for more information.
+See |kbroom-core-autocmds| for more information.
 
 Spell check:
 
 Similarly to indentation settings, spell check is enabled in markdown, TeX,
 and plain text buffers using |ftplugin|.
-See |theovim-ftplugin| for more information.
+See |kbroom-ftplugin| for more information.
 
 - Words unrecognized by the spell checker will be underlined
 - |z=| gives the suggestions for the word under the cursor
@@ -152,14 +154,14 @@ char            action
 See also:
 - |folding|
 - |nvim_treesitter#foldexpr()|
-- |theovim-treesitter|
+- |kbroom-treesitter|
 
 ==============================================================================
-Initialization - ftplugins                            *theovim-init-ftplugins*
+Initialization - ftplugins                            *kbroom-init-ftplugins*
 
 |ftplugin| provides options and commands specific to certain filetypes.
 
-Theovim uses them to control:
+KBroom uses them to control:
 - Indentation settings
 - Coding style settings (|'colorcolumn'|)
 - Command to (compile) and execute the current file using a stadard tool
@@ -190,17 +192,17 @@ See also:
 - |write-filetype-plugin|
 
 ==============================================================================
-Initialization - User Commands                         *theovim-init-commands*
+Initialization - User Commands                         *kbroom-init-commands*
 
 - `:TrimWhitespace`: Trim trailing whitespaces. It will prompts you with
   confirmations for each whitespace.
 - `:CD`: Change the local directory to the parent directory of the current
   file. For example, when the current directory is `nvim` and you open
-  `doc/theovim.txt`, invoke the command to change the directory to `doc`.
+  `doc/kbroom.txt`, invoke the command to change the directory to `doc`.
   This is useful when narrowing down the scope of a Telescope search.
 
 ==============================================================================
-Initialization - autocmds                              *theovim-init-autocmds*
+Initialization - autocmds                              *kbroom-init-autocmds*
 
 Organized based on |autocmd-groups|.
 - `YankHighlight`: Highlight the yanked text. See |TextYankPost|
@@ -223,9 +225,9 @@ Organized based on |autocmd-groups|.
   with indentation settings set by |ftplugin|.
 
 ==============================================================================
-Initialization - Keymaps                                *theovim-init-keymaps*
+Initialization - Keymaps                                *kbroom-init-keymaps*
 
-Theovim overrides the following default keybindings.
+KBroom overrides the following default keybindings.
 They do not change the way you interact with Vim but provides
 quality-of-life improvements.
 
@@ -270,7 +272,7 @@ N               Highlight the prev search result (|N|) and center the
                 type +, -, <, or > to resize the window.
 
 
-Theovim defines keybindings for frequently used actions that require more than
+KBroom defines keybindings for frequently used actions that require more than
 three keystrokes. For example, there is no keybinding to go to a tab since
 {count}|gt| is a two-keystrokes away.
 Following is the complete list of custom keybindings defined in `init.lua`:
@@ -327,12 +329,12 @@ jk              (insert mode) ESC.
                 Else: Create a window to the right and navigate to it
 
 ==============================================================================
-Initialization - netrw                                    *theovim-init-netrw*
+Initialization - netrw                                    *kbroom-init-netrw*
 
 Netrw is a built-in file manager for Vim and Neovim.
 Netrw is intended to be used for visualizing directories and centering the
 buffer.
-For actual file management, use |oil.nvim| explained in the |theovim-plugins|
+For actual file management, use |oil.nvim| explained in the |kbroom-plugins|
 section.
 
 char            action
@@ -348,7 +350,7 @@ See also:
 - |netrw|
 
 ==============================================================================
-Plugins                                                      *theovim-plugins*
+Plugins                                                      *kbroom-plugins*
 
 |lazy.nvim| is a Neovim plugin manager.
 - Its installation bootstrap is defined in `init.lua`
@@ -397,7 +399,7 @@ char            action
 <leader>gd      [G]it [D]iff current buffer.
                 Calls |gitsigns.diffthis()|.
 
-|tokyonight.nvim| is the default theme for Theovim.
+|tokyonight.nvim| is the default theme for KBroom.
 Transparency is enabled for all elements, including sidebars and floats.
 toggle transparency, locate `is_transparnt` variable in the `config`
 function and set it to false.
@@ -414,7 +416,7 @@ real-time compilation.
 - `:VimtexCompile` starts a real-time compilation process
 
 ==============================================================================
-Telescope                                                  *theovim-telescope*
+Telescope                                                  *kbroom-telescope*
 
 Telescope is a fuzzy finder for Neovim.
 It allows you to find anything you want in just a few keystrokes.
@@ -526,14 +528,14 @@ See also:
 - |telescope.file-browser.nvim|: File browser extension
 
 ==============================================================================
-Treesitter                                                *theovim-treesitter*
+Treesitter                                                *kbroom-treesitter*
 
 Treesitter (TS) is an incremental parser generator for more accurate syntax
 highlighting compared to the default regex-based highlighting.
 TS also integrates with Vim's folding and selection mechanism to provide a
 more efficient navigation and editing experience.
 
-Theovim installs the following TS servers out of the box:
+KBroom installs the following TS servers out of the box:
 
 - Bash
 - C
@@ -595,7 +597,7 @@ See also:
 - |treesitter|: Neovim built-in treesitter library
 
 ==============================================================================
-Diagnostic                                                *theovim-diagnostic*
+Diagnostic                                                *kbroom-diagnostic*
 
 Neovim has a built-in diagnostic framework to display errors or warning
 messages from external tools like LSP or linters.
@@ -629,7 +631,7 @@ See also:
 - |diagnostic.txt|
 
 ==============================================================================
-LSP                                                              *theovim-lsp*
+LSP                                                              *kbroom-lsp*
 
 |mason.nvim| lets you install and manage LSP servers within Neovim.
 - |:Mason| opens the graphical manager for available LSP servers
@@ -741,7 +743,7 @@ See also:
   work that you do not have to worry about
 
 ==============================================================================
-Completion                                                *theovim-completion*
+Completion                                                *kbroom-completion*
 
 Auto-completion is available in any buffer, and they work like any other
 modern IDEs.
@@ -828,9 +830,9 @@ See also:
 - |ins-completion|: Default Vim completion library
 
 ==============================================================================
-UI Components                                                     *theovim-ui*
+UI Components                                                     *kbroom-ui*
 
-Theovim features unique UI components written in Lua.
+KBroom features unique UI components written in Lua.
 
 - A simple Tabline to maximize Vim's built |tabpage|, featuring:
   - Number of windows in the current tab
@@ -840,7 +842,7 @@ Theovim features unique UI components written in Lua.
   - Diagnostics & Git information
   - Dynamic content adjustment based on the current window size
 - Startup Dashboard featuring:
-  - ASCII art of my chunky cat Oliver (randomly selected from the pool)
+  - ASCII art of Nieve (snow-loving labrador, randomly selected from the pool)
 
 See also:
 - |setting-tabline|: Guide on configuring Tabline
@@ -848,11 +850,11 @@ See also:
 - |'winbar'|: Neovim window bar, currently not in use
 
 ==============================================================================
-Documentation                                          *theovim-documentation*
+Documentation                                          *kbroom-documentation*
 
-This file (|theovim.txt|) contains the complete list of all Theovim features.
+This file (|kbroom.txt|) contains the complete list of all KBroom features.
 
-- README.md: Outlines a brief overview for each Theovim module.
+- README.md: Outlines a brief overview for each KBroom module.
   It is more of a sales pitch than a serious documentation.
 - CHANGELOG.md: has the list of options, keybindings, Lua functions, plugins,
   and other Neovim features I tried that did not work out for me.

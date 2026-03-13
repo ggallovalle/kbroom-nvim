@@ -104,10 +104,10 @@ M.config = function()
   )
 
   -- Makes autocmd for LSP functionalities
-  local theovim_lsp_config_group = vim.api.nvim_create_augroup("TheovimLspConfig", { clear = true, })
+  local kbroom_lsp_config_group = vim.api.nvim_create_augroup("KBroomLspConfig", { clear = true, })
 
   vim.api.nvim_create_autocmd("LspAttach", {
-    group = theovim_lsp_config_group,
+    group = kbroom_lsp_config_group,
     callback = function(event)
       local map = function(keys, func, desc)
         vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
@@ -152,25 +152,25 @@ M.config = function()
       -- Creates an autocmd to highlight the symbol under the cursor
       local client = vim.lsp.get_client_by_id(event.data.client_id)
       if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-        local theovim_lsp_hl_group = vim.api.nvim_create_augroup("TheovimLspHl", { clear = false, })
+        local kbroom_lsp_hl_group = vim.api.nvim_create_augroup("KBroomLspHl", { clear = false, })
         vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
           buffer = event.buf,
-          group = theovim_lsp_hl_group,
+          group = kbroom_lsp_hl_group,
           callback = vim.lsp.buf.document_highlight,
         })
 
         vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
           buffer = event.buf,
-          group = theovim_lsp_hl_group,
+          group = kbroom_lsp_hl_group,
           callback = vim.lsp.buf.clear_references,
         })
 
-        local theovim_lsp_detach_group = vim.api.nvim_create_augroup("TheovimLspHlDetach", { clear = true, })
+        local kbroom_lsp_detach_group = vim.api.nvim_create_augroup("KBroomLspHlDetach", { clear = true, })
         vim.api.nvim_create_autocmd("LspDetach", {
-          group = theovim_lsp_detach_group,
+          group = kbroom_lsp_detach_group,
           callback = function(event2)
             vim.lsp.buf.clear_references()
-            vim.api.nvim_clear_autocmds({ group = "TheovimLspHl", buffer = event2.buf })
+            vim.api.nvim_clear_autocmds({ group = "KBroomLspHl", buffer = event2.buf })
           end
         })
       end

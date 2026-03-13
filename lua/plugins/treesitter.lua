@@ -1,8 +1,4 @@
 --- plugins/treesitter.lua
---- $ figlet -f threepoint theovim
---- _|_|_  _  _   . _ _
----  | | |(/_(_)\/|| | |
----
 --- Configure Neovim built-in Treesitter engine
 
 local M = { "nvim-treesitter/nvim-treesitter" }

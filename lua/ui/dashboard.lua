@@ -1,9 +1,5 @@
 --- *dashboard.lua* Startup Dashboard
 ---
---- $ figlet -f mini theovim
---- _|_|_  _  _   o._ _
----  |_| |(/_(_)\/|| | |
----
 --- Provide a framework to open a dashboard on the Neovim startup when there is no buffer opened (only the empty buf)
 ---
 --- Suggested dependencies:
@@ -13,73 +9,39 @@
 
 local Dashboard = {}
 
--- ASCII arts of my chunky cat Oliver
--- Mostly from: https://www.asciiart.eu/animals/cats
--- Make sure the length of each string is consistent! Hard coding much...
-local olivers = {
+-- ASCII art of Nieve (snow-loving labrador)
+-- Consistent widths to keep alignment tidy
+local nieves = {
   {
-    [[          \/   \/              ]],
-    [[          |\__/,|     _        ]],
-    [[        _.|o o  |_   ) )       ]],
-    [[       -(((---(((--------      ]]
-  },
-  -- This one is by Jonathan
-  {
-    [[       \/ \/                   ]],
-    [[       /\_/\ _______           ]],
-    [[      = o_o =  _ _  \     _    ]],
-    [[      (__^__)   __(  \.__) )   ]],
-    [[   (@)<_____>__(_____)____/    ]],
+    [[         / \__                ]],
+    [[       (    @\___             ]],
+    [[       /         O            ]],
+    [[      /   (_____ /            ]],
+    [[     /_____/     U            ]],
   },
   {
-    [[        \/   \/                ]],
-    [[        |\__/,|        _       ]],
-    [[        |_ _  |.-----.) )      ]],
-    [[        ( T   ))        )      ]],
-    [[       (((^_(((/___(((_/       ]]
-  },
-  {
-    [[          \/       \/          ]],
-    [[          /\_______/\          ]],
-    [[         /   o   o   \         ]],
-    [[        (  ==  ^  ==  )        ]],
-    [[         )           (         ]],
-    [[        (             )        ]],
-    [[        ( (  )   (  ) )        ]],
-    [[       (__(__)___(__)__)       ]],
-  },
-  {
-    [[                          _    ]],
-    [[         |\      _-``---,) )   ]],
-    [[   ZZZzz /,`.-'`'    -.   /    ]],
-    [[        |,4-  ) )-,_. ,\ (     ]],
-    [[       '---''(_/--'  `-'\_)    ]]
+    [[        / \__                 ]],
+    [[      (    @\___              ]],
+    [[      /         o             ]],
+    [[     /   (_____ /             ]],
+    [[    /_____/     U             ]],
   },
 }
 math.randomseed(os.time())
-local header = olivers[math.random(#olivers)]
+local header = nieves[math.random(#nieves)]
 
 local footer = os.date("[ ━━%m-%d━━ ❖ ━━%H:%M━━ ]")
 local logos = {
-  -- fourstops
   {
-    [[ | /|~~\                   ]],
-    [[ |( |--<|/~\/~\/~\|/~\ /~\ ]],
-    [[ | \|__/|   \_/\_/|   |   |]],
+    [[            *    *      *     *   *     *     ]],
+    [[  _  __ ___                        ___        ]],
+    [[ | |/ // _ ) ___ ___  ___  _ __   / _ \       ]],
+    [[ |   / / _  |/ -_) _ \/ _ \| '  \ / , _/       ]],
+    [[ |_|_\ /____/\__/\___/\___/|_|_|_|/_/|_|       ]],
+    [[            *    *      *     *   *     *     ]],
     "",
     footer
   },
-  -- doom
-  {
-    [[  _   ________                            ]],
-    [[ | | / /| ___ \                           ]],
-    [[ | |/ / | |_/ /_ __ ___   ___  _ __ ___   ]],
-    [[ |    \ | ___ \ '__/ _ \ / _ \| '_ ` _ \ ]],
-    [[ | |\  \| |_/ / | | (_) | (_) | | | | | | ]],
-    [[ \_| \_/\____/|_|  \___/ \___/|_| |_| |_| ]],
-    "",
-    footer
-  }
 }
 
 local logo = logos[math.random(#logos)]
@@ -123,7 +85,7 @@ local render = function()
   -- Create a new buffer and replace the old one
   local buf = vim.api.nvim_create_buf(false, true) --> listed false, scratchbuffer true
   vim.api.nvim_win_set_buf(0, buf)
-  vim.opt_local.filetype       = "TheovimDashboard"
+  vim.opt_local.filetype       = "kbroomdashboard"
   vim.opt_local.buflisted      = false
   vim.opt_local.list           = false
   vim.opt_local.wrap           = true
@@ -210,7 +172,7 @@ Dashboard.setup = function()
 
   vim.api.nvim_create_autocmd("VimResized", {
     callback = function()
-      if vim.bo.filetype == "TheovimDashboard" then
+      if vim.bo.filetype == "kbroomdashboard" then
         vim.opt_local.modifiable = true
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "" })
         Dashboard.opener()

@@ -1,7 +1,5 @@
 # kbroom-nvim
 
-![theovim-banner](./assets/theovim-banner.jpg)
-
 ## Getting Started
 
 > [!NOTE]
@@ -13,7 +11,7 @@ brew install neovim
 
 # Optional backup
 [[ -e ~/.config/nvim ]] && mv ~/.config/nvim ~/.config/nvim.bak
-# Install Theovim files in ~/.config/nvim
+# Install KBroom files in ~/.config/nvim
 git clone --depth 1 https://github.com/ggallovalle/kbroom-nvim.git ~/.config/nvim
 
 # Open nvim - current folder
@@ -58,15 +56,15 @@ Inside of neovim LSP interaction (to work with python, javascript, typescript, e
 
 ## Overview
 
-Theovim is my personal Neovim configuration, featuring a complete Telescope, Treesitter, and LSP setup, ~30 carefully selected plugins, and custom UI components in Lua.
+KBroom is my personal Neovim configuration, featuring a complete Telescope, Treesitter, and LSP setup, ~30 carefully selected plugins, and custom UI components in Lua.
 
-Theovim:
+KBroom:
 
 0. prioritizes built-in Neovim features and Lua over plugins to avoid duplicate keybindings and features
 0. keeps the stock configuration as much as possible when using external plugins -- the plugin author knows more about the plugin than I do
 0. follows the [Open-closed Principle](https://en.wikipedia.org/wiki/Open-closed_principle) when organizing Lua configuration modules
 
-**For more information, read the [Highlights](#highlights) section and the built-in [help documentation](./doc/theovim.txt) using `:help theovim`.**
+**For more information, read the [Highlights](#highlights) section and the built-in [help documentation](./doc/kbroom.txt) using `:help kbroom`.**
 
 ## Prerequisites
 
@@ -80,15 +78,15 @@ Theovim:
 - [NerdFonts](https://www.nerdfonts.com/font-downloads) to render glyphs
 - `make` and some C compiler to compile `telescope-fzf-native.nvim`
 - `npm`, `g++` (`gcc-c++`), and `unzip` for some LSP servers
-- `git` to update Theovim
+- `git` to update KBroom
 
 ## Highlights
 
-- `:help theovim-tldr`: Summary of the Theovim help documentation
+- `:help kbroom-tldr`: Summary of the KBroom help documentation
 
 ### Initialization/Core
 
-Theovim creates a solid base Neovim experience by maximizing built-in features.
+KBroom creates a solid base Neovim experience by maximizing built-in features.
 The `init.lua` file initializes sensible default options, autocmds, and keybindings without external plugins or modules.
 
 - Automatically adjust indentation settings using [ftplugin](./after/ftplugin/)
@@ -98,15 +96,15 @@ The `init.lua` file initializes sensible default options, autocmds, and keybindi
 
 For more information:
 
-- `:help theovim-init-options`
-- `:help theovim-init-keymaps`
-- `:help theovim-init-commands`
-- `:help theovim-init-autocmds`
-- `:help theovim-init-netrw`
+- `:help kbroom-init-options`
+- `:help kbroom-init-keymaps`
+- `:help kbroom-init-commands`
+- `:help kbroom-init-autocmds`
+- `:help kbroom-init-netrw`
 
 ### Plugins
 
-Theovim provides ~30 carefully selected plugins managed by [lazy.nvim](https://github.com/folke/lazy.nvim).
+KBroom provides ~30 carefully selected plugins managed by [lazy.nvim](https://github.com/folke/lazy.nvim).
 Here are some of the plugins that will make your life easier.
 
 - [oil.nvim](https://github.com/stevearc/oil.nvim) is a file manager that lets you manage files like a Vim buffer
@@ -115,13 +113,13 @@ Here are some of the plugins that will make your life easier.
 - [nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua) highlight color codes (hex codes, ANSI color name such as "Magenta", CSS functions, etc.)
 - [todo-comments.nvim](https://github.com/folke/todo-comments.nvim) highlights keywords such as `TODO`, `WARN`, etc.
 - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) provides Git signs in the gutter (+, -, ~, etc.) as well as other useful Git functionalities, such as diff, navigating hunks, and blame tool
-- [Tokyo Night](https://github.com/folke/tokyonight.nvim) is a beautiful default theme for Theovim
+- [Tokyo Night](https://github.com/folke/tokyonight.nvim) is a beautiful default theme for KBroom
 - [Markdown Preview](https://github.com/iamcco/markdown-preview.nvim) offers a real-time previewer for markdown files in your browser
 - [VimTeX](https://github.com/lervag/vimtex) is a LaTeX integration for Vim, providing syntax highlights and real-time compilation.
 
 For more information:
 
-- `:help theovim-plugins`
+- `:help kbroom-plugins`
 
 ### Telescope
 
@@ -142,7 +140,7 @@ A few of my favorite Telescope features:
 
 For more information:
 
-- `:help theovim-telescope`
+- `:help kbroom-telescope`
 
 ### Treesitter
 
@@ -151,7 +149,7 @@ TS also integrates with Vim's folding and selection mechanism to provide a more 
 
 For more information:
 
-- `:help theovim-treesitter`
+- `:help kbroom-treesitter`
 
 ### LSP
 
@@ -166,21 +164,21 @@ There are three main parts of LSP:
 
 For more information:
 
-- `:help theovim-diagnostic`
-- `:help theovim-lsp`
-- `:help theovim-completion`
+- `:help kbroom-diagnostic`
+- `:help kbroom-lsp`
+- `:help kbroom-completion`
 
 ### UI
 
-Theovim features unique UI components written in Lua.
+KBroom features unique UI components written in Lua.
 
 - Tabline: A simple and unique Tabline with buffer information to keep track of open buffers without sacrificing Vim's built-in tab system
 - Statusline: A simple and informative Statusline inspired by Mini.nvim (https://github.com/echasnovski/mini.nvim), featuring Git and LSP information
-- Dashboard: Startup dashboard with a random ASCII art that resemble my chunky cat Oliver
+- Dashboard: Startup dashboard with a random ASCII art of Nieve (snow-loving labrador)
 
 For more information:
 
-- `:help theovim-ui`
+- `:help kbroom-ui`
 
 ### References
 
@@ -200,6 +198,5 @@ For more information:
 - Tools:
     - [Stuff.nvim](https://github.com/tamton-aquib/stuff.nvim): Notepad
 - Documentation:
-    - Built-in insert mode help documentation (`:h insert.txt`): Theovim help formatting
+    - Built-in insert mode help documentation (`:h insert.txt`): KBroom help formatting
     - [Tokyo Night Wallpapers](https://github.com/tokyo-night/wallpapers/blob/main/night/minimal/stripes_00_2560x1440.png): Wallpaper in the screenshot
-
