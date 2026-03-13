@@ -7,3 +7,12 @@
 ```sh
 tests/minit.lua --minitest "$test_file"
 ```
+
+
+## format
+
+> Run format
+
+```sh
+stylua lua/
+```

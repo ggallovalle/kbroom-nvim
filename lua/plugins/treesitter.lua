@@ -10,9 +10,9 @@ local plugins = {
     build = ":TSUpdate",
     opts = function()
       return {
-        ensure_installed = { "bash", "c", "cpp", "latex", "lua", "markdown", "python", },
+        ensure_installed = { "bash", "c", "cpp", "latex", "lua", "markdown", "python" },
         auto_install = false,
-        highlight = { enable = true, },
+        highlight = { enable = true },
         indent = { enable = true },
         incremental_selection = {
           enable = true,

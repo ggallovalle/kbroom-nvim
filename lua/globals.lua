@@ -1,11 +1,11 @@
-local LazyLoader = require("lazy.core.loader")
 local LazyConfig = require("lazy.core.config")
+local LazyLoader = require("lazy.core.loader")
 
 local M = {}
 local H = {}
 
 M.deps = {
-  "settings"
+  "settings",
 }
 
 function M.setup()
@@ -72,7 +72,6 @@ function H.R(mod, opts)
     package.loaded[mod] = nil
     ok, mod_ref = pcall(require, mod)
   end
-
 
   if setup_ref ~= nil then
     return setup_ref

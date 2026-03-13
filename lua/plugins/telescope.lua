@@ -111,10 +111,9 @@ local Telescope = {
       builtin.find_files({ cwd = vim.fn.stdpath("config") })
     end, { desc = "[S]earch [N]eovim files" })
 
-    vim.keymap.set("n", "<leader>gf",
-      function() builtin.git_files({ show_untracked = true }) end,
-      { desc = "Search [G]it [F]iles" }
-    )
+    vim.keymap.set("n", "<leader>gf", function()
+      builtin.git_files({ show_untracked = true })
+    end, { desc = "Search [G]it [F]iles" })
     vim.keymap.set("n", "<leader>gc", builtin.git_commits, { desc = "Search [G]it [C]ommits" })
     vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Search [G]it [S]tatus" })
 

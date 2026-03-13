@@ -5,7 +5,9 @@ function M.setup()
   vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("KBroomYankHighlight", { clear = true }),
     pattern = "*",
-    callback = function() vim.highlight.on_yank() end,
+    callback = function()
+      vim.highlight.on_yank()
+    end,
     desc = "Highlight yanked text",
   })
 
@@ -14,8 +16,10 @@ function M.setup()
     -- TermOpen: for when terminal is opened for the first time
     -- BufEnter: when you navigate to an existing terminal buffer
     group = vim.api.nvim_create_augroup("KBroomTerminal", { clear = true }),
-    pattern = "term://*",     --> only applicable for "BufEnter", an ignored Lua table key when evaluating TermOpen
-    callback = function() vim.cmd("startinsert") end
+    pattern = "term://*", --> only applicable for "BufEnter", an ignored Lua table key when evaluating TermOpen
+    callback = function()
+      vim.cmd("startinsert")
+    end,
   })
 
   -- Update indentation guide dynamically

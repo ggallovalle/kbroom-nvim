@@ -12,7 +12,7 @@ local hidden = {
 }
 
 local always_hidden = {
-  "__pycache__"
+  "__pycache__",
 }
 
 ---@type LazyPluginSpec[]

@@ -8,11 +8,13 @@ function M.setup()
       border = "rounded",
       format = function(diagnostic)
         -- "ERROR (line n): message"
-        return string.format("%s (line %i): %s",
+        return string.format(
+          "%s (line %i): %s",
           vim.diagnostic.severity[diagnostic.severity],
           diagnostic.lnum + 1,
-          diagnostic.message)
-      end
+          diagnostic.message
+        )
+      end,
     },
     update_in_insert = false,
   })

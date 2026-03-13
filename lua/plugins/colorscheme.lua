@@ -1,5 +1,5 @@
-local settings = require("settings")
 local gruvbox_overrides = require("colorschemes.catpuccin-gruvbox")
+local settings = require("settings")
 
 ---@type LazyPluginSpec
 local Catppuccin = {

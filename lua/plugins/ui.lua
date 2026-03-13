@@ -23,25 +23,25 @@ local Lualine = {
   opts = function()
     return {
       sections = {
-        lualine_a = { { 'mode', fmt = H.first_str } },
-        lualine_b = { 'diff', 'diagnostics' },
-        lualine_c = { 'filename' },
-        lualine_x = { 'filetype' },
-        lualine_y = { 'progress' },
-        lualine_z = { 'location' },
+        lualine_a = { { "mode", fmt = H.first_str } },
+        lualine_b = { "diff", "diagnostics" },
+        lualine_c = { "filename" },
+        lualine_x = { "filetype" },
+        lualine_y = { "progress" },
+        lualine_z = { "location" },
       },
       inactive_sections = {
         lualine_a = {},
-        lualine_b = { 'branch' },
-        lualine_c = { 'filename' },
-        lualine_x = { 'location' },
+        lualine_b = { "branch" },
+        lualine_c = { "filename" },
+        lualine_x = { "location" },
         lualine_y = {},
         lualine_z = {},
       },
     }
   end,
   config = function(_, opts)
-    require('lualine').setup(opts)
+    require("lualine").setup(opts)
   end,
 }
 

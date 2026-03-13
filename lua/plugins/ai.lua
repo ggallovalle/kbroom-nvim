@@ -21,21 +21,21 @@ local CopilotChat = {
   -- tag v4.7.4 (2025-10-01) https://github.com/CopilotC-Nvim/CopilotChat.nvim/releases/tag/v4.7.4
   tag = "v4.7.4",
   dependencies = {
-    CopilotVim,                      -- copilot core
-    Plenary,                         -- curl/log/async helpers
+    CopilotVim, -- copilot core
+    Plenary, -- curl/log/async helpers
   },
-  build = "make tiktoken",           -- Only on MacOS or Linux
+  build = "make tiktoken", -- Only on MacOS or Linux
   opts = function()
     return {
       window = {
-        layout = 'vertical',
+        layout = "vertical",
         width = 0.3,
         height = 0.5,
-        relative = 'editor',
-        border = 'single',
+        relative = "editor",
+        border = "single",
         row = nil,
         col = nil,
-        title = 'Copilot Chat',
+        title = "Copilot Chat",
         footer = nil,
         zindex = 1,
       },

@@ -2,9 +2,9 @@ local M = {}
 
 function M.setup()
   vim.g.netrw_banner = 0
-  vim.g.netrw_liststyle = 0      --> 0: Simple, 1: Detailed, 2: Thick, 3: Tree
-  vim.g.netrw_browse_split = 3   --> Open file in 0: Reuse the same win, 1: Horizontal split, 2: Vertical split, 3: New tab
-  vim.g.netrw_winsize = 25       --> seems to be in percentage
+  vim.g.netrw_liststyle = 0 --> 0: Simple, 1: Detailed, 2: Thick, 3: Tree
+  vim.g.netrw_browse_split = 3 --> Open file in 0: Reuse the same win, 1: Horizontal split, 2: Vertical split, 3: New tab
+  vim.g.netrw_winsize = 25 --> seems to be in percentage
 
   vim.g.is_netrw_open = false
   --- Toggles netrw
@@ -23,8 +23,7 @@ function M.setup()
       vim.g.is_netrw_open = true
     end
   end
-  vim.keymap.set("n", "<leader>n", toggle_netrw,
-    { silent = true, noremap = true, desc = "Toggle [N]etrw" })
+  vim.keymap.set("n", "<leader>n", toggle_netrw, { silent = true, noremap = true, desc = "Toggle [N]etrw" })
 end
 
 return M

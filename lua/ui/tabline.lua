@@ -44,9 +44,9 @@ M.build = function()
 
     -- Basic setup
     s = s .. ((i == curr_tabnum) and "%#TabLineSel#" or "%#TabLine#") --> diff hl for active and inactive tabs
-    s = s .. " "                                                      --> Left margin/separator
-    s = s .. "%" .. i .. "T"                                          --> make tab clickable (%nT)
-    s = s .. i .. " "                                                 --> Tab index
+    s = s .. " " --> Left margin/separator
+    s = s .. "%" .. i .. "T" --> make tab clickable (%nT)
+    s = s .. i .. " " --> Tab index
 
     -- Icon
     if M.has_devicons then
@@ -70,7 +70,9 @@ M.build = function()
     end
 
     -- Number of windows in the tab
-    if #buflist > 1 then s = s .. " [" .. (#buflist) .. " Win]" end
+    if #buflist > 1 then
+      s = s .. " [" .. #buflist .. " Win]"
+    end
 
     -- Make close button clickable ("%nX", %999X closes the current tab)
     local curr_tab_close_btn = "%" .. i .. "X"

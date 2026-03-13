@@ -35,7 +35,7 @@ local LazyDev = {
   opts = function()
     return {
       library = {
-        { path = "luvit-meta/library", words = { "vim%.uv" }, },
+        { path = "luvit-meta/library", words = { "vim%.uv" } },
       },
     }
   end,
@@ -71,14 +71,14 @@ local H = {}
 H.config_mason = function()
   require("mason").setup()
 
-  local vue_language_server_path = vim.fn.stdpath('data') ..
-      "/mason/packages/vue-language-server/node_modules/@vue/language-server"
-  local tsserver_filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' }
+  local vue_language_server_path = vim.fn.stdpath("data")
+    .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+  local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
   local vue_plugin = {
-    name = '@vue/typescript-plugin',
+    name = "@vue/typescript-plugin",
     location = vue_language_server_path,
-    languages = { 'vue' },
-    configNamespace = 'typescript',
+    languages = { "vue" },
+    configNamespace = "typescript",
   }
 
   local servers = {
@@ -131,20 +131,16 @@ local LspConfig = {
     Phpactor,
   },
   config = function()
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-      vim.lsp.handlers.hover, {
-        border = "rounded",
-        title = "Hover"
-      }
-    )
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-      vim.lsp.handlers.signature_help, {
-        border = "rounded",
-        title = "Signature Help"
-      }
-    )
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+      border = "rounded",
+      title = "Hover",
+    })
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+      border = "rounded",
+      title = "Signature Help",
+    })
 
-    local kbroom_lsp_config_group = vim.api.nvim_create_augroup("KBroomLspConfig", { clear = true, })
+    local kbroom_lsp_config_group = vim.api.nvim_create_augroup("KBroomLspConfig", { clear = true })
 
     vim.api.nvim_create_autocmd("LspAttach", {
       group = kbroom_lsp_config_group,
@@ -162,23 +158,31 @@ local LspConfig = {
         local telescope_opt_vsplit = { jump_type = "vsplit" }
         local telescope_opt_tabdrop = { jump_type = "tab drop" }
 
-        map("gdt", status and function() builtin.lsp_definitions(telescope_opt_tab) end or vim.lsp.buf.definition,
-          "[G]oto [D]efinition [T]ab")
-        map("gds", status and function() builtin.lsp_definitions(telescope_opt_split) end or vim.lsp.buf.definition,
-          "[G]oto [D]efinition [S]plit")
-        map("gdv", status and function() builtin.lsp_definitions(telescope_opt_vsplit) end or vim.lsp.buf.definition,
-          "[G]oto [D]efinition [V]split")
-        map("gdd", status and function() builtin.lsp_definitions(telescope_opt_tabdrop) end or vim.lsp.buf.definition,
-          "[G]oto [D]efinition Tab [D]rop")
+        map("gdt", status and function()
+          builtin.lsp_definitions(telescope_opt_tab)
+        end or vim.lsp.buf.definition, "[G]oto [D]efinition [T]ab")
+        map("gds", status and function()
+          builtin.lsp_definitions(telescope_opt_split)
+        end or vim.lsp.buf.definition, "[G]oto [D]efinition [S]plit")
+        map("gdv", status and function()
+          builtin.lsp_definitions(telescope_opt_vsplit)
+        end or vim.lsp.buf.definition, "[G]oto [D]efinition [V]split")
+        map("gdd", status and function()
+          builtin.lsp_definitions(telescope_opt_tabdrop)
+        end or vim.lsp.buf.definition, "[G]oto [D]efinition Tab [D]rop")
 
         map("gr", builtin.lsp_references or vim.lsp.buf.references, "[G]oto [R]eferences")
         map("gI", builtin.lsp_implementations or vim.lsp.buf.implementation, "[G]oto [I]mplementation")
-        map("<leader>D",
-          status and function() builtin.lsp_type_definitions(telescope_opt) end or vim.lsp.buf.type_definition,
-          "Type [D]efinition")
+        map("<leader>D", status and function()
+          builtin.lsp_type_definitions(telescope_opt)
+        end or vim.lsp.buf.type_definition, "Type [D]efinition")
 
         map("<leader>ds", builtin.lsp_document_symbols or vim.lsp.buf.document_symbol, "[D]ocument [S]ymbols")
-        map("<leader>ws", builtin.lsp_dynamic_workspace_symbols or vim.lsp.buf.workspace_symbol, "[W]orkspace [S]ymbols")
+        map(
+          "<leader>ws",
+          builtin.lsp_dynamic_workspace_symbols or vim.lsp.buf.workspace_symbol,
+          "[W]orkspace [S]ymbols"
+        )
 
         map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
         map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
@@ -186,20 +190,20 @@ local LspConfig = {
 
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-          local kbroom_lsp_hl_group = vim.api.nvim_create_augroup("KBroomLspHl", { clear = false, })
+          local kbroom_lsp_hl_group = vim.api.nvim_create_augroup("KBroomLspHl", { clear = false })
           vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
             buffer = event.buf,
             group = kbroom_lsp_hl_group,
             callback = vim.lsp.buf.document_highlight,
           })
 
-          local kbroom_lsp_detach_group = vim.api.nvim_create_augroup("KBroomLspHlDetach", { clear = true, })
+          local kbroom_lsp_detach_group = vim.api.nvim_create_augroup("KBroomLspHlDetach", { clear = true })
           vim.api.nvim_create_autocmd("LspDetach", {
             group = kbroom_lsp_detach_group,
             callback = function(event2)
               vim.lsp.buf.clear_references()
               vim.api.nvim_clear_autocmds({ group = "KBroomLspHl", buffer = event2.buf })
-            end
+            end,
           })
         end
 

@@ -33,7 +33,6 @@ M.colorscheme = "gruvbox"
 -- M.colorscheme_flavor = "gruvbox" -- custom
 -- M.colorscheme_flavor = "vscode-dark" -- custom
 
-
 -- M.colorscheme = "tokyonight"
 -- M.colorscheme_flavor = "night"
 -- M.colorscheme_flavor = "storm"

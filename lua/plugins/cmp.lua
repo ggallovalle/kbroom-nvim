@@ -93,8 +93,8 @@ local NvimCmp = {
         ["<C-e>"] = cmp.mapping.abort(),
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
-        ["<CR>"]  = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
+        ["<C-y>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
+        ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
         ["<C-Space>"] = cmp.mapping.complete({}),
         ["<C-l>"] = cmp.mapping(function()
           if luasnip.expand_or_locally_jumpable() then
@@ -159,8 +159,8 @@ local NvimCmp = {
     luasnip.config.setup({})
 
     cmp.setup(opts.setup)
-    cmp.setup.cmdline({ '/', '?' }, opts.cmdline.search)
-    cmp.setup.cmdline(':', opts.cmdline.cmd)
+    cmp.setup.cmdline({ "/", "?" }, opts.cmdline.search)
+    cmp.setup.cmdline(":", opts.cmdline.cmd)
   end,
 }
 

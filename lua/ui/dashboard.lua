@@ -40,7 +40,7 @@ local logos = {
     [[ |_|_\ /____/\__/\___/\___/|_|_|_|/_/|_|       ]],
     [[            *    *      *     *   *     *     ]],
     "",
-    footer
+    footer,
   },
 }
 
@@ -56,7 +56,6 @@ logo[#logo + 1] = empty_line
 -- max height = empty line + #header + #logo + empty line + 1 safety net
 local max_height = 1 + #header + #logo + 1 + 1
 
-
 --- render()
 --- If the buffer does not have a name, replace the buffer with the formated Dashboard contents
 --- Inspired by : https://github.com/chadcat7/kodo/blob/main/lua/ui/dash/init.lua
@@ -70,7 +69,9 @@ local render = function()
   -- Condition check --
 
   -- Expands the current file name and see if it's empty
-  if vim.api.nvim_buf_get_name(0) ~= "" then return end --> or use vim.fn.expand("%")
+  if vim.api.nvim_buf_get_name(0) ~= "" then
+    return
+  end --> or use vim.fn.expand("%")
 
   -- Check if window is too small to launch
   if win_height < max_height then
@@ -85,25 +86,25 @@ local render = function()
   -- Create a new buffer and replace the old one
   local buf = vim.api.nvim_create_buf(false, true) --> listed false, scratchbuffer true
   vim.api.nvim_win_set_buf(0, buf)
-  vim.opt_local.filetype       = "kbroomdashboard"
-  vim.opt_local.buflisted      = false
-  vim.opt_local.list           = false
-  vim.opt_local.wrap           = true
+  vim.opt_local.filetype = "kbroomdashboard"
+  vim.opt_local.buflisted = false
+  vim.opt_local.list = false
+  vim.opt_local.wrap = true
   vim.opt_local.relativenumber = false
-  vim.opt_local.number         = false
-  vim.opt_local.cursorline     = false
-  vim.opt_local.cursorcolumn   = false
-  vim.opt_local.colorcolumn    = "0"
+  vim.opt_local.number = false
+  vim.opt_local.cursorline = false
+  vim.opt_local.cursorcolumn = false
+  vim.opt_local.colorcolumn = "0"
 
-  vim.opt_local.modifiable     = true
+  vim.opt_local.modifiable = true
 
   -----------------------------------
   -- Init the DB contents--
 
   -- Table for the contents
-  local dashboard              = {}
+  local dashboard = {}
   -- add padding to the header
-  local add_padding            = function(str)
+  local add_padding = function(str)
     local pad = (win_width - vim.fn.strwidth(str)) / 2
     return string.rep(" ", math.floor(pad)) .. str
   end
@@ -137,14 +138,14 @@ local render = function()
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, result)
 
   -- set the cursor: 15 is is my best guess on where the first char of the button would be. If too narrow, use 0
-  local cursor_column_idx = (win_width > max_width) and (math.floor(win_width / 2) - 15) or (0)
+  local cursor_column_idx = (win_width > max_width) and (math.floor(win_width / 2) - 15) or 0
   vim.api.nvim_win_set_cursor(0, { hdr_start_idx + #header + #logo, cursor_column_idx })
 
   ---------------------------
   -- Setting highlights --
 
-  for i = hdr_start_idx, hdr_start_idx + #header - 2 do                       --> Ignore last two empty lines
-    vim.api.nvim_buf_add_highlight(buf, -1, "MiniStarterFooter", i, 0, -1)    --> -1 for no namespace
+  for i = hdr_start_idx, hdr_start_idx + #header - 2 do --> Ignore last two empty lines
+    vim.api.nvim_buf_add_highlight(buf, -1, "MiniStarterFooter", i, 0, -1) --> -1 for no namespace
   end
   for i = hdr_start_idx + #header - 2, hdr_start_idx + #header + #logo - 2 do --> Again, -2 because of empty lines
     vim.api.nvim_buf_add_highlight(buf, -1, "MiniStarterHeader", i, 0, -1)
