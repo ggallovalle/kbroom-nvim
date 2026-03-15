@@ -1,5 +1,7 @@
 local M = {}
 
+M.enable_ai = false
+
 M.colorscheme_is_transparent = false
 
 M.colorscheme = "gruvbox"
