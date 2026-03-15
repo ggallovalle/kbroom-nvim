@@ -1,6 +1,3 @@
----@type LazyPluginSpec[]
-local plugins = {}
-
 local function nav_to_file(n)
   return function()
     local ui = require("harpoon.ui")
@@ -36,7 +33,7 @@ local Harpoon = {
   end,
 }
 
-plugins[#plugins + 1] = MarksNvim
-plugins[#plugins + 1] = Harpoon
-
-return plugins
+return {
+  MarksNvim,
+  Harpoon,
+}

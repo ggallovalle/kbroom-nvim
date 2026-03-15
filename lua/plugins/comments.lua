@@ -1,20 +1,9 @@
----@type LazyPluginSpec[]
-local plugins = {}
-
----@type LazyPluginSpec
-local Plenary = {
-  url = "https://github.com/nvim-lua/plenary.nvim.git",
-  -- commit b9fd522 (date unknown, from lazy-lock) https://github.com/nvim-lua/plenary.nvim/commit/b9fd5226c2f76c951fc8ed5923d85e4de065e509
-  commit = "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
-}
-
 ---@type LazyPluginSpec
 local TodoComments = {
   url = "https://github.com/folke/todo-comments.nvim.git",
   -- commit 31e3c38 (date unknown, from lazy-lock) https://github.com/folke/todo-comments.nvim/commit/31e3c38ce9b29781e4422fc0322eb0a21f4e8668
   commit = "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
   event = "VimEnter",
-  dependencies = { Plenary },
   opts = function()
     return { signs = false }
   end,
@@ -42,7 +31,7 @@ local TsComments = {
   end,
 }
 
-plugins[#plugins + 1] = TodoComments
-plugins[#plugins + 1] = TsComments
-
-return plugins
+return {
+  TodoComments,
+  TsComments,
+}

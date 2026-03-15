@@ -1,10 +1,8 @@
----@type LazyPluginSpec[]
-local plugins = {}
-
 ---@type LazyPluginSpec
 local FriendlySnippets = {
   url = "https://github.com/rafamadriz/friendly-snippets.git",
-  -- commit 6cd7280 (date unknown, from lazy-lock) https://github.com/rafamadriz/friendly-snippets/commit/6cd7280adead7f586db6fccbd15d2cac7e2188b9
+  -- last version check: 2026-03-15
+  -- commit date: 2026-01-23
   commit = "6cd7280adead7f586db6fccbd15d2cac7e2188b9",
 }
 
@@ -164,6 +162,6 @@ local NvimCmp = {
   end,
 }
 
-plugins[#plugins + 1] = NvimCmp
-
-return plugins
+return {
+  NvimCmp,
+}

@@ -15,22 +15,11 @@ local always_hidden = {
   "__pycache__",
 }
 
----@type LazyPluginSpec[]
-local plugins = {}
-
----@type LazyPluginSpec
-local Devicons = {
-  url = "https://github.com/nvim-tree/nvim-web-devicons.git",
-  -- commit 746ffbb (date unknown, from lazy-lock) https://github.com/nvim-tree/nvim-web-devicons/commit/746ffbb17975ebd6c40142362eee1b0249969c5c
-  commit = "746ffbb17975ebd6c40142362eee1b0249969c5c",
-}
-
 ---@type LazyPluginSpec
 local Oil = {
   url = "https://github.com/stevearc/oil.nvim.git",
   -- commit 975a77c (date unknown, from lazy-lock) https://github.com/stevearc/oil.nvim/commit/975a77cce3c8cb742bc1b3629f4328f5ca977dad
   commit = "975a77cce3c8cb742bc1b3629f4328f5ca977dad",
-  dependencies = { Devicons },
   keys = {
     { "<leader>fo", "<cmd>Oil --preview <cr>", desc = "[File] [O]il" },
   },
@@ -49,6 +38,6 @@ local Oil = {
   end,
 }
 
-plugins[#plugins + 1] = Oil
-
-return plugins
+return {
+  Oil,
+}

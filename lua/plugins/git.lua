@@ -1,13 +1,3 @@
----@type LazyPluginSpec[]
-local plugins = {}
-
----@type LazyPluginSpec
-local Telescope = {
-  url = "https://github.com/nvim-telescope/telescope.nvim.git",
-  -- commit a0bbec2 (date unknown, from lazy-lock) https://github.com/nvim-telescope/telescope.nvim/commit/a0bbec21143c7bc5f8bb02e0005fa0b982edc026
-  commit = "a0bbec21143c7bc5f8bb02e0005fa0b982edc026",
-}
-
 ---@type LazyPluginSpec
 local GitSigns = {
   url = "https://github.com/lewis6991/gitsigns.nvim.git",
@@ -41,7 +31,6 @@ local NeoGit = {
   tag = "v1.0.0",
   name = "neogit",
   main = "neogit",
-  dependencies = { Telescope },
   opts = function()
     return {
       integrations = {
@@ -51,7 +40,7 @@ local NeoGit = {
   end,
 }
 
-plugins[#plugins + 1] = GitSigns
-plugins[#plugins + 1] = NeoGit
-
-return plugins
+return {
+  GitSigns,
+  NeoGit,
+}

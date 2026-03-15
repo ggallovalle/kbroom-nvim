@@ -1,16 +1,15 @@
----@type LazyPluginSpec[]
-local plugins = {
-  {
-    url = "https://github.com/NvChad/nvim-colorizer.lua.git",
-    -- commit 338409d (date unknown, from lazy-lock) https://github.com/NvChad/nvim-colorizer.lua/commit/338409dd8a6ed74767bad3eb5269f1b903ffb3cf
-    commit = "338409dd8a6ed74767bad3eb5269f1b903ffb3cf",
-    opts = function()
-      return {}
-    end,
-    config = function(_, opts)
-      require("colorizer").setup(opts)
-    end,
-  },
+---@type LazyPluginSpec
+local NvimColorizer = {
+  url = "https://github.com/NvChad/nvim-colorizer.lua.git",
+  -- last version check: 2026-03-15
+  -- commit date: 2026-03-07
+  commit = "ef211089af881bea206c7aa3f2693a81feee7e90",
+  event = "BufReadPre",
+  opts = function()
+    return {}
+  end,
 }
 
-return plugins
+return {
+  NvimColorizer,
+}

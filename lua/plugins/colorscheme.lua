@@ -179,8 +179,7 @@ local TokyoNight = {
   end,
 }
 
----@type LazyPluginSpec[]
-local plugins_list = {
+return {
   Catppuccin,
   Gruvbox,
   VsCode,
@@ -189,5 +188,3 @@ local plugins_list = {
   Nord,
   TokyoNight,
 }
-
-return plugins_list

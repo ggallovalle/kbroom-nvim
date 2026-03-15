@@ -1,34 +1,55 @@
---- plugins/treesitter.lua
---- Configure Neovim built-in Treesitter engine
-
----@type LazyPluginSpec[]
-local plugins = {
-  {
-    url = "https://github.com/nvim-treesitter/nvim-treesitter.git",
-    -- commit 42fc28b (date unknown, from lazy-lock) https://github.com/nvim-treesitter/nvim-treesitter/commit/42fc28ba918343ebfd5565147a42a26580579482
-    commit = "42fc28ba918343ebfd5565147a42a26580579482",
-    build = ":TSUpdate",
-    opts = function()
-      return {
-        ensure_installed = { "bash", "c", "cpp", "latex", "lua", "markdown", "python" },
-        auto_install = false,
-        highlight = { enable = true },
-        indent = { enable = true },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<C-space>",
-            node_incremental = "<C-space>",
-            scope_incremental = "<C-s>",
-            node_decremental = "<M-space>",
-          },
-        },
-      }
-    end,
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
-    end,
-  },
+---@type LazyPluginSpec
+local Treesitter = {
+  url = "https://github.com/nvim-treesitter/nvim-treesitter.git",
+  -- last version check: 2026-03-15
+  -- commit date: 2026-03-14
+  commit = "42fc28ba918343ebfd5565147a42a26580579482",
+  build = ":TSUpdate",
+  lazy = false,
+  config = function(self, opts)
+    require("nvim-treesitter").setup()
+    require("nvim-treesitter").install({
+      -- general
+      "markdown",
+      "markdown_inline",
+      "gitignore",
+      "sql",
+      --
+      "rust",
+      --
+      "lua",
+      --
+      "python",
+      -- javascript and web
+      "javascript",
+      "typescript",
+      "jsx",
+      "tsx",
+      "vue",
+      "css",
+      "html",
+      -- elixir
+      "elixir",
+      "eex",
+      -- data transport
+      "json",
+      "kdl",
+      "yaml",
+      "xml",
+      "csv",
+      "toml",
+      "hcl",
+      -- terminal
+      "bash",
+      "fish",
+      "zsh",
+      "powershell",
+      "dockerfile",
+      "just",
+    })
+  end,
 }
 
-return plugins
+return {
+  Treesitter,
+}
