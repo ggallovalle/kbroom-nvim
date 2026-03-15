@@ -3,7 +3,7 @@ local Treesitter = {
   url = "https://github.com/nvim-treesitter/nvim-treesitter.git",
   -- last version check: 2026-03-15
   -- commit date: 2026-03-14
-  commit = "42fc28ba918343ebfd5565147a42a26580579482",
+  commit = "f873ec2955098fc4b7c3abfe891bdd49fa7947e2",
   build = ":TSUpdate",
   lazy = false,
   config = function(self, opts)

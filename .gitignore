@@ -1,5 +1,3 @@
-lazy-lock.json
-.luarc.json
 *.log
 /.repro
 /.tests
