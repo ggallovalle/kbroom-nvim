@@ -1,6 +1,3 @@
----@type LazyPluginSpec[]
-local plugins = {}
-
 ---@type LazyPluginSpec
 local Mason = {
   url = "https://github.com/williamboman/mason.nvim.git",
@@ -101,6 +98,35 @@ H.config_mason = function()
           telemetry = { enable = false },
         },
       },
+      on_init = function(client)
+        if client.workspace_folders then
+          local path = client.workspace_folders[1].name
+          if path ~= vim.fn.stdpath("config") then
+            return
+          end
+        end
+
+        client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+          runtime = {
+            version = "LuaJIT",
+            path = {
+              "lua/?.lua",
+              "lua/?/init.lua",
+            },
+          },
+          workspace = {
+            checkThirdParty = false,
+            library = {
+              vim.env.VIMRUNTIME,
+              vim.fn.stdpath("data") .. "/lazy",
+              -- Depending on the usage, you might want to add additional paths
+              -- here.
+              -- '${3rd}/luv/library',
+              -- '${3rd}/busted/library',
+            },
+          },
+        })
+      end,
     },
     phpactor = {},
     rust_analyzer = {},
@@ -114,6 +140,77 @@ H.config_mason = function()
     ensure_installed = vim.tbl_keys(servers or {}),
     automatic_enable = true,
   })
+end
+
+H.on_attach = function(event)
+  local map = function(keys, func, desc)
+    vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+  end
+
+  map("<leader>F", vim.lsp.buf.format, "[F]ormat buffer")
+
+  local status, builtin = pcall(require, "telescope.builtin")
+  local telescope_opt_tab = { jump_type = "tab" }
+  local telescope_opt = telescope_opt_tab
+  local telescope_opt_split = { jump_type = "split" }
+  local telescope_opt_vsplit = { jump_type = "vsplit" }
+  local telescope_opt_tabdrop = { jump_type = "tab drop" }
+
+  map("gdt", status and function()
+    builtin.lsp_definitions(telescope_opt_tab)
+  end or vim.lsp.buf.definition, "[G]oto [D]efinition [T]ab")
+  map("gds", status and function()
+    builtin.lsp_definitions(telescope_opt_split)
+  end or vim.lsp.buf.definition, "[G]oto [D]efinition [S]plit")
+  map("gdv", status and function()
+    builtin.lsp_definitions(telescope_opt_vsplit)
+  end or vim.lsp.buf.definition, "[G]oto [D]efinition [V]split")
+  map("gdd", status and function()
+    builtin.lsp_definitions(telescope_opt_tabdrop)
+  end or vim.lsp.buf.definition, "[G]oto [D]efinition Tab [D]rop")
+
+  map("gr", builtin.lsp_references or vim.lsp.buf.references, "[G]oto [R]eferences")
+  map("gI", builtin.lsp_implementations or vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+  map("<leader>D", status and function()
+    builtin.lsp_type_definitions(telescope_opt)
+  end or vim.lsp.buf.type_definition, "Type [D]efinition")
+
+  map("<leader>ds", builtin.lsp_document_symbols or vim.lsp.buf.document_symbol, "[D]ocument [S]ymbols")
+  map("<leader>ws", builtin.lsp_dynamic_workspace_symbols or vim.lsp.buf.workspace_symbol, "[W]orkspace [S]ymbols")
+
+  map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+  map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+  map("gD", vim.lsp.buf.declaration, "[G]o [D]eclaration")
+
+  local client = vim.lsp.get_client_by_id(event.data.client_id)
+  if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+    local kbroom_lsp_hl_group = vim.api.nvim_create_augroup("KBroomLspHl", { clear = false })
+    vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+      buffer = event.buf,
+      group = kbroom_lsp_hl_group,
+      callback = vim.lsp.buf.document_highlight,
+    })
+
+    local kbroom_lsp_detach_group = vim.api.nvim_create_augroup("KBroomLspHlDetach", { clear = true })
+    vim.api.nvim_create_autocmd("LspDetach", {
+      group = kbroom_lsp_detach_group,
+      callback = function(event2)
+        vim.lsp.buf.clear_references()
+        vim.api.nvim_clear_autocmds({ group = "KBroomLspHl", buffer = event2.buf })
+      end,
+    })
+  end
+
+  if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+    map("<leader>th", function()
+      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+    end, "[T]oggle Inlay [H]ints")
+  end
+
+  if client and client.name == "basedpyright" then
+    local navic = require("nvim-navic")
+    navic.attach(client, event.buf)
+  end
 end
 
 ---@type LazyPluginSpec
@@ -144,80 +241,7 @@ local LspConfig = {
 
     vim.api.nvim_create_autocmd("LspAttach", {
       group = kbroom_lsp_config_group,
-      callback = function(event)
-        local map = function(keys, func, desc)
-          vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
-        end
-
-        map("<leader>F", vim.lsp.buf.format, "[F]ormat buffer")
-
-        local status, builtin = pcall(require, "telescope.builtin")
-        local telescope_opt_tab = { jump_type = "tab" }
-        local telescope_opt = telescope_opt_tab
-        local telescope_opt_split = { jump_type = "split" }
-        local telescope_opt_vsplit = { jump_type = "vsplit" }
-        local telescope_opt_tabdrop = { jump_type = "tab drop" }
-
-        map("gdt", status and function()
-          builtin.lsp_definitions(telescope_opt_tab)
-        end or vim.lsp.buf.definition, "[G]oto [D]efinition [T]ab")
-        map("gds", status and function()
-          builtin.lsp_definitions(telescope_opt_split)
-        end or vim.lsp.buf.definition, "[G]oto [D]efinition [S]plit")
-        map("gdv", status and function()
-          builtin.lsp_definitions(telescope_opt_vsplit)
-        end or vim.lsp.buf.definition, "[G]oto [D]efinition [V]split")
-        map("gdd", status and function()
-          builtin.lsp_definitions(telescope_opt_tabdrop)
-        end or vim.lsp.buf.definition, "[G]oto [D]efinition Tab [D]rop")
-
-        map("gr", builtin.lsp_references or vim.lsp.buf.references, "[G]oto [R]eferences")
-        map("gI", builtin.lsp_implementations or vim.lsp.buf.implementation, "[G]oto [I]mplementation")
-        map("<leader>D", status and function()
-          builtin.lsp_type_definitions(telescope_opt)
-        end or vim.lsp.buf.type_definition, "Type [D]efinition")
-
-        map("<leader>ds", builtin.lsp_document_symbols or vim.lsp.buf.document_symbol, "[D]ocument [S]ymbols")
-        map(
-          "<leader>ws",
-          builtin.lsp_dynamic_workspace_symbols or vim.lsp.buf.workspace_symbol,
-          "[W]orkspace [S]ymbols"
-        )
-
-        map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-        map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-        map("gD", vim.lsp.buf.declaration, "[G]o [D]eclaration")
-
-        local client = vim.lsp.get_client_by_id(event.data.client_id)
-        if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-          local kbroom_lsp_hl_group = vim.api.nvim_create_augroup("KBroomLspHl", { clear = false })
-          vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-            buffer = event.buf,
-            group = kbroom_lsp_hl_group,
-            callback = vim.lsp.buf.document_highlight,
-          })
-
-          local kbroom_lsp_detach_group = vim.api.nvim_create_augroup("KBroomLspHlDetach", { clear = true })
-          vim.api.nvim_create_autocmd("LspDetach", {
-            group = kbroom_lsp_detach_group,
-            callback = function(event2)
-              vim.lsp.buf.clear_references()
-              vim.api.nvim_clear_autocmds({ group = "KBroomLspHl", buffer = event2.buf })
-            end,
-          })
-        end
-
-        if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-          map("<leader>th", function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
-          end, "[T]oggle Inlay [H]ints")
-        end
-
-        if client and client.name == "basedpyright" then
-          local navic = require("nvim-navic")
-          navic.attach(client, event.buf)
-        end
-      end,
+      callback = H.on_attach,
     })
 
     local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -227,6 +251,6 @@ local LspConfig = {
   end,
 }
 
-plugins[#plugins + 1] = LspConfig
-
-return plugins
+return {
+  LspConfig,
+}
