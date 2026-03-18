@@ -92,6 +92,9 @@ H.config_mason = function()
       filetypes = tsserver_filetypes,
     },
     vue_ls = {},
+    jsonls = {},
+    oxfmt = {},
+    oxlint = {},
     lua_ls = {
       settings = {
         Lua = {

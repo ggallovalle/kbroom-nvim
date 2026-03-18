@@ -27,17 +27,18 @@ local GitSigns = {
 ---@type LazyPluginSpec
 local NeoGit = {
   url = "https://github.com/NeogitOrg/neogit.git",
-  -- tag v1.0.0 (2024-05-16) https://github.com/NeogitOrg/neogit/releases/tag/v1.0.0
-  tag = "v1.0.0",
-  name = "neogit",
-  main = "neogit",
+  -- last version check: 2025-03-15
+  -- commit date: 2025-06-26
+  commit = "d3890fc3cdf0859845a86b2be306bba01458df1a",
   opts = function()
+    --- @type NeogitConfig
     return {
       integrations = {
         telescope = true,
       },
     }
   end,
+  cmd = "Neogit",
 }
 
 return {

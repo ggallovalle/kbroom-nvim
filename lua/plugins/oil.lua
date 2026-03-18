@@ -24,6 +24,7 @@ local Oil = {
     { "<leader>fo", "<cmd>Oil --preview <cr>", desc = "[File] [O]il" },
   },
   opts = function()
+    --- @type oil.SetupOpts
     return {
       default_file_explorer = false, --> do not hijack netrw
       view_options = {
