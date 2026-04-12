@@ -2,11 +2,15 @@ local Effect = require("effect.Effect")
 local FileSystem = require("effect.FileSystem")
 local JSON = require("effect.JSON")
 local Path = require("effect.Path")
+local XdgDirs = require("effect.XdgDirs")
 
 local M = {}
 
-M.luarc = function()
-  local data_path = vim.fn.stdpath("data")
+---@param path effect.Path
+---@param xdg effect.XdgDirs
+---@return table
+function M.luarc(path, xdg)
+  local data_path = xdg:data()
 
   local luarc = {
     runtime = {
@@ -20,7 +24,7 @@ M.luarc = function()
       checkThirdParty = false,
       library = {
         vim.env.VIMRUNTIME,
-        data_path .. "/lazy",
+        path:join(data_path, "lazy"),
       },
     },
   }
@@ -32,11 +36,12 @@ end
 ---@return Effect<{path: string, saved: "yes" | "no-already-exists"}>
 function M.write_luarc_json(effect)
   return Effect.gen(function()
-    local path = Effect.yield(Path.get(effect))
-    local config_path = path:join(vim.fn.stdpath("config"), ".luarc.json")
+    local xdg = Effect.yield(XdgDirs.get(effect))
+    local path_svc = Effect.yield(Path.get(effect))
+    local config_path = path_svc:join(xdg:config(), ".luarc.json")
 
     local json = Effect.yield(JSON.get(effect))
-    local luarc = M.luarc()
+    local luarc = M.luarc(path_svc, xdg)
     local json_str = Effect.yield(json:encode(luarc))
 
     local fs = Effect.yield(FileSystem.get(effect))
