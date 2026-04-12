@@ -24,8 +24,11 @@ end
 local function main()
     local effect = Effect.root()
     NvimRuntime(effect)
+    local runner = program(effect)
+    local before = vim.inspect({ before = "run", deps = runner.args._dependencies })
+    vim.api.nvim_echo({ { before, "Title" } }, true, {})
 
-    Effect.run(program(effect), function(err, value)
+    Effect.run(runner, function(err, value)
         if err then
             vim.notify("Error: " .. err, vim.log.levels.ERROR)
             return

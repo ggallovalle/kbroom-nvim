@@ -1,5 +1,7 @@
 ---@class Effect<T>
 ---@field context EffectContext The DI context
+---@field op string Operation type: "succeed" | "fail" | "sync" | "callback" | "map" | "flatMap" | "mapError" | "service" | "gen"
+---@field args any Arguments for the operation
 
 ---@class EffectContext
 ---@field get fun(self: EffectContext, key: string): any
@@ -145,24 +147,42 @@ end
 ---@param fn fun(): T
 ---@return Effect<T>
 function Effect.gen(fn)
-  return Effect.callback(function(callback)
-    local co = coroutine.create(fn)
-    local function resume(err, value)
-      if err then
-        callback(err, nil)
-        return
-      end
-      local ok, effect_or_value = coroutine.resume(co, value)
-      if not ok then
-        callback(effect_or_value, nil)
-      elseif coroutine.status(co) == "dead" then
-        callback(nil, effect_or_value)
-      else
-        Effect.run(effect_or_value, resume)
-      end
+  local co = coroutine.create(fn)
+  local steps = {}
+  local dependencies = {}
+
+  local function collect()
+    local ok, effect_or_value = coroutine.resume(co)
+    if not ok or coroutine.status(co) == "dead" then
+      return
     end
-    resume(nil, nil)
-  end)
+
+    if effect_or_value then
+      table.insert(steps, effect_or_value)
+      if effect_or_value.op == "service" then
+        local key = effect_or_value.args._key
+        local found = false
+        for _, dep in ipairs(dependencies) do
+          if dep == key then found = true break end
+        end
+        if not found then table.insert(dependencies, key) end
+      end
+      collect()
+    else
+      collect()
+    end
+  end
+  collect()
+
+  local self = setmetatable({}, EffectImpl)
+  self.context = new_context()
+  self.op = "gen"
+  self.args = {
+    _fn = fn,
+    _steps = steps,
+    _dependencies = dependencies,
+  }
+  return self
 end
 
 ---Run an effect and get the result via callback
@@ -213,6 +233,30 @@ function Effect.run(effect, callback)
           cb(nil, value)
         end
       end)
+    elseif e.op == "service" then
+      local impl = e.context:get(e.args._key)
+      if impl then
+        cb(nil, impl)
+      else
+        cb("service not found: " .. e.args._key, nil)
+      end
+    elseif e.op == "gen" then
+      local co = coroutine.create(e.args._fn)
+      local function run_step(err, value)
+        if err then
+          cb(err, nil)
+          return
+        end
+        local ok, effect_or_value = coroutine.resume(co, value)
+        if not ok then
+          cb(effect_or_value, nil)
+        elseif coroutine.status(co) == "dead" then
+          cb(nil, effect_or_value)
+        else
+          Effect.run(effect_or_value, run_step)
+        end
+      end
+      run_step(nil, nil)
     end
   end
 
@@ -232,11 +276,11 @@ function Effect.context(effect, context)
 end
 
 function Effect.service(effect, key)
-  local impl = effect.context:get(key)
-  if impl ~= nil then
-    return Effect.succeed(impl)
-  end
-  return Effect.fail("missing required service: " .. key)
+  local self = setmetatable({}, EffectImpl)
+  self.context = effect.context
+  self.op = "service"
+  self.args = { _key = key }
+  return self
 end
 
 return Effect

@@ -40,14 +40,14 @@ function M.write_luarc_json(effect)
   return Effect.gen(function()
     local xdg = Effect.yield(XdgDirs.get(effect))
     local path_svc = Effect.yield(Path.get(effect))
-    local config_path = path_svc:join(xdg:config(), ".luarc.json")
-
     local json = Effect.yield(JSON.get(effect))
     local env = Effect.yield(Env.get(effect))
+    local fs = Effect.yield(FileSystem.get(effect))
+
+    local config_path = path_svc:join(xdg:config(), ".luarc.json")
     local luarc = M.luarc(path_svc, xdg, env)
     local json_str = Effect.yield(json:encode(luarc))
 
-    local fs = Effect.yield(FileSystem.get(effect))
     local exists = Effect.yield(fs:exist(config_path))
     if exists then
       return { path = config_path, saved = "no-already-exists" }
