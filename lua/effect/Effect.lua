@@ -83,21 +83,20 @@ function Effect.callback(fn)
   return self
 end
 
----Map over an effect (static method)
+---Map over an effect (static method) - dual API
 ---@generic A, B
+---@param effect Effect<A>
 ---@param fn fun(a: A): B
----@return fun(e: Effect<A>): Effect<B>
-function Effect.map(fn)
-  return function(effect)
-    local self = setmetatable({}, EffectImpl)
-    self.context = effect.context
-    self.op = "map"
-    self.args = {
-      _effect = effect,
-      _fn = fn,
-    }
-    return self
-  end
+---@return Effect<B>
+function Effect.map(effect, fn)
+  local self = setmetatable({}, EffectImpl)
+  self.context = effect.context
+  self.op = "map"
+  self.args = {
+    _effect = effect,
+    _fn = fn,
+  }
+  return self
 end
 
 ---FlatMap/chain effects (static method) - dual API

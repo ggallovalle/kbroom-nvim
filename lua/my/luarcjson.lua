@@ -35,20 +35,16 @@ function M.write_luarc_json(effect)
 
   local get_fs = FileSystem.get(effect)
   local chained = Effect.flatMap(get_fs, function(fs)
-    return Effect.callback(function(callback)
-      fs:exist(config_path, function(exists)
-        if exists then
-          callback(nil, { path = config_path, saved = "no-already-exists" })
-        else
-          fs:write_file_string(config_path, json_str, function(err, bytes)
-            if err then
-              callback(err, nil)
-            else
-              callback(nil, { path = config_path, saved = "yes" })
-            end
-          end)
-        end
-      end)
+    local check_exist = fs:exist(config_path)
+    return Effect.flatMap(check_exist, function(exists)
+      if exists then
+        return Effect.succeed({ path = config_path, saved = "no-already-exists" })
+      else
+        local write = fs:write_file_string(config_path, json_str)
+        return Effect.map(write, function(bytes)
+          return { path = config_path, saved = "yes" }
+        end)
+      end
     end)
   end)
 
