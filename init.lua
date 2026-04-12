@@ -26,10 +26,15 @@ local function main()
     local effect = Effect.root()
     FileSystem.set(effect, NvimFileSystem)
 
-    Effect.run(program(effect), function(result)
-        local value = vim.inspect({ result = result, after = "run" })
-        vim.api.nvim_echo({ { value, "after", } }, true, {})
-        if result.saved == "no-error" then
+    Effect.run(program(effect), function(err, value)
+        if err then
+            vim.notify("Error: " .. err, vim.log.levels.ERROR)
+            return
+        end
+        assert(value)
+        local result = vim.inspect({ result = value, after = "run" })
+        vim.api.nvim_echo({ { result, "after", } }, true, {})
+        if value.saved == "no-error" then
             vim.notify("Failed to write .luarc.json", vim.log.levels.ERROR)
         end
     end)

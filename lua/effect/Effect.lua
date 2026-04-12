@@ -1,7 +1,5 @@
 ---@class Effect<T>
 ---@field context EffectContext The DI context
----@field op string Operation type: "succeed" | "sync" | "callback" | "map" | "flatMap"
----@field args any Arguments for the operation
 
 ---@class EffectContext
 ---@field get fun(self: EffectContext, key: string): any
@@ -40,6 +38,17 @@ function Effect.succeed(value)
   return self
 end
 
+---Create a fail effect (always fails with error)
+---@param err string
+---@return Effect<any>
+function Effect.fail(err)
+  local self = setmetatable({}, EffectImpl)
+  self.context = new_context()
+  self.op = "fail"
+  self.args = err
+  return self
+end
+
 ---Create a root effect (empty effect, equivalent to Effect.succeed(nil))
 ---@return Effect<nil>
 function Effect.root()
@@ -64,7 +73,7 @@ end
 
 ---Create a callback effect (from callback-style async function)
 ---@generic T
----@param fn fun(callback: fun(value: T))
+---@param fn fun(callback: fun(err: nil|string, value: T|nil))
 ---@return Effect<T>
 function Effect.callback(fn)
   local self = setmetatable({}, EffectImpl)
@@ -107,30 +116,70 @@ function Effect.flatMap(effect, fn)
   return self
 end
 
+---Map over an effect's error (static method)
+---@generic T
+---@param fn fun(err: string): string
+---@return fun(effect: Effect<T>): Effect<T>
+function Effect.mapError(fn)
+  return function(effect)
+    local self = setmetatable({}, EffectImpl)
+    self.context = effect.context
+    self.op = "mapError"
+    self.args = {
+      _effect = effect,
+      _fn = fn,
+    }
+    return self
+  end
+end
+
 ---Run an effect and get the result via callback
 ---@generic T
 ---@param effect Effect<T>
----@param callback fun(value: T)
+---@param callback fun(err: nil|string, value: T|nil)
 function Effect.run(effect, callback)
   local function run_rec(e, cb)
     if e.op == "succeed" then
-      cb(e.args)
+      cb(nil, e.args)
+    elseif e.op == "fail" then
+      cb(e.args, nil)
     elseif e.op == "sync" then
-      cb(e.args())
+      local ok, result = pcall(e.args)
+      if ok then
+        cb(nil, result)
+      else
+        cb(result, nil)
+      end
     elseif e.op == "callback" then
-      local wrapped_cb = function(value)
+      local wrapped_cb = function(err, value)
         vim.schedule(function()
-          cb(value)
+          cb(err, value)
         end)
       end
       e.args(wrapped_cb)
     elseif e.op == "map" then
-      run_rec(e.args._effect, function(value)
-        cb(e.args._fn(value))
+      run_rec(e.args._effect, function(err, value)
+        if err then
+          cb(err, nil)
+        else
+          cb(nil, e.args._fn(value))
+        end
       end)
     elseif e.op == "flatMap" then
-      run_rec(e.args._effect, function(inner)
-        run_rec(e.args._fn(inner), cb)
+      run_rec(e.args._effect, function(err, value)
+        if err then
+          cb(err, nil)
+        else
+          run_rec(e.args._fn(value), cb)
+        end
+      end)
+    elseif e.op == "mapError" then
+      run_rec(e.args._effect, function(err, value)
+        if err then
+          cb(e.args._fn(err), nil)
+        else
+          cb(nil, value)
+        end
       end)
     end
   end

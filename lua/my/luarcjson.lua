@@ -27,7 +27,7 @@ end
 
 ---Write .luarc.json to nvim config directory
 ---@param effect Effect<any>
----@return Effect<{path: string, saved: "yes" | "no-already-exists" | "no-error"}>
+---@return Effect<{path: string, saved: "yes" | "no-already-exists"}>
 function M.write_luarc_json(effect)
   local config_path = vim.fs.joinpath(vim.fn.stdpath("config"), ".luarc.json")
   local luarc = M.luarc()
@@ -38,13 +38,13 @@ function M.write_luarc_json(effect)
     return Effect.callback(function(callback)
       fs:exist(config_path, function(exists)
         if exists then
-          callback({ path = config_path, saved = "no-already-exists" })
+          callback(nil, { path = config_path, saved = "no-already-exists" })
         else
           fs:write_file_string(config_path, json_str, function(err, bytes)
             if err then
-              callback({ path = config_path, saved = "no-error" })
+              callback(err, nil)
             else
-              callback({ path = config_path, saved = "yes" })
+              callback(nil, { path = config_path, saved = "yes" })
             end
           end)
         end
