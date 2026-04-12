@@ -65,86 +65,6 @@ local Phpactor = {
 
 local H = {}
 
-H.config_mason = function()
-  require("mason").setup()
-
-  local vue_language_server_path = vim.fn.stdpath("data")
-    .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
-  local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
-  local vue_plugin = {
-    name = "@vue/typescript-plugin",
-    location = vue_language_server_path,
-    languages = { "vue" },
-    configNamespace = "typescript",
-  }
-
-  local servers = {
-    bashls = {},
-    texlab = {},
-    basedpyright = {},
-    ruff = {},
-    ts_ls = {
-      init_options = {
-        plugins = {
-          vue_plugin,
-        },
-      },
-      filetypes = tsserver_filetypes,
-    },
-    vue_ls = {},
-    jsonls = {},
-    oxfmt = {},
-    oxlint = {},
-    lua_ls = {
-      settings = {
-        Lua = {
-          telemetry = { enable = false },
-        },
-      },
-      on_init = function(client)
-        if client.workspace_folders then
-          local path = client.workspace_folders[1].name
-          if path ~= vim.fn.stdpath("config") then
-            return
-          end
-        end
-
-        client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
-          runtime = {
-            version = "LuaJIT",
-            path = {
-              "lua/?.lua",
-              "lua/?/init.lua",
-            },
-          },
-          workspace = {
-            checkThirdParty = false,
-            library = {
-              vim.env.VIMRUNTIME,
-              vim.fn.stdpath("data") .. "/lazy",
-              -- Depending on the usage, you might want to add additional paths
-              -- here.
-              -- '${3rd}/luv/library',
-              -- '${3rd}/busted/library',
-            },
-          },
-        })
-      end,
-    },
-    phpactor = {},
-    rust_analyzer = {},
-  }
-
-  for server, config in pairs(servers) do
-    vim.lsp.config(server, config)
-  end
-
-  require("mason-lspconfig").setup({
-    ensure_installed = vim.tbl_keys(servers or {}),
-    automatic_enable = true,
-  })
-end
-
 H.on_attach = function(event)
   local map = function(keys, func, desc)
     vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
@@ -231,15 +151,6 @@ local LspConfig = {
     Phpactor,
   },
   config = function()
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-      border = "rounded",
-      title = "Hover",
-    })
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-      border = "rounded",
-      title = "Signature Help",
-    })
-
     local kbroom_lsp_config_group = vim.api.nvim_create_augroup("KBroomLspConfig", { clear = true })
 
     vim.api.nvim_create_autocmd("LspAttach", {
@@ -250,7 +161,83 @@ local LspConfig = {
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-    H.config_mason()
+    require("mason").setup()
+
+    local vue_language_server_path = vim.fn.stdpath("data")
+        .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+    local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
+    local vue_plugin = {
+      name = "@vue/typescript-plugin",
+      location = vue_language_server_path,
+      languages = { "vue" },
+      configNamespace = "typescript",
+    }
+
+    local servers = {
+      bashls = {},
+      texlab = {},
+      basedpyright = {},
+      ruff = {},
+      ts_ls = {
+        init_options = {
+          plugins = {
+            vue_plugin,
+          },
+        },
+        filetypes = tsserver_filetypes,
+      },
+      vue_ls = {},
+      jsonls = {},
+      oxfmt = {},
+      oxlint = {},
+      lua_ls = {
+        settings = {
+          Lua = {
+            telemetry = { enable = false },
+          },
+        },
+        on_init = function(client)
+          if client.workspace_folders then
+            local path = client.workspace_folders[1].name
+            if path ~= vim.fn.stdpath("config") then
+              return
+            end
+          end
+
+          client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+            runtime = {
+              version = "LuaJIT",
+              path = {
+                "lua/?.lua",
+                "lua/?/init.lua",
+              },
+            },
+            workspace = {
+              checkThirdParty = false,
+              library = {
+                vim.env.VIMRUNTIME,
+                vim.fn.stdpath("data") .. "/lazy",
+                -- Depending on the usage, you might want to add additional paths
+                -- here.
+                -- '${3rd}/luv/library',
+                -- '${3rd}/busted/library',
+              },
+            },
+          })
+        end,
+      },
+      phpactor = {},
+      rust_analyzer = {},
+    }
+
+    for server, config in pairs(servers) do
+      vim.lsp.config(server, config)
+    end
+
+    require("mason-lspconfig").setup({
+      ensure_installed = vim.tbl_keys(servers or {}),
+      automatic_enable = true,
+    })
   end,
 }
 
