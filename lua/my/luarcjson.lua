@@ -33,22 +33,15 @@ function M.write_luarc_json(effect)
   local luarc = M.luarc()
   local json_str = vim.fn.json_encode(luarc)
 
-  local get_fs = FileSystem.get(effect)
-  local chained = Effect.flatMap(get_fs, function(fs)
-    local check_exist = fs:exist(config_path)
-    return Effect.flatMap(check_exist, function(exists)
-      if exists then
-        return Effect.succeed({ path = config_path, saved = "no-already-exists" })
-      else
-        local write = fs:write_file_string(config_path, json_str)
-        return Effect.map(write, function(bytes)
-          return { path = config_path, saved = "yes" }
-        end)
-      end
-    end)
+  return Effect.gen(function()
+    local fs = Effect.yield(FileSystem.get(effect))
+    local exists = Effect.yield(fs:exist(config_path))
+    if exists then
+      return { path = config_path, saved = "no-already-exists" }
+    end
+    Effect.yield(fs:write_file_string(config_path, json_str))
+    return { path = config_path, saved = "yes" }
   end)
-
-  return chained
 end
 
 return M

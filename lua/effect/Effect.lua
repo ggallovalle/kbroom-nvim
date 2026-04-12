@@ -132,6 +132,39 @@ function Effect.mapError(fn)
   end
 end
 
+---Yield to an effect (suspend coroutine, run effect, resume with value)
+---@generic T
+---@param effect Effect<T>
+---@return T
+function Effect.yield(effect)
+  return coroutine.yield(effect)
+end
+
+---Create an effect from a generator function (async/await style)
+---@generic T
+---@param fn fun(): T
+---@return Effect<T>
+function Effect.gen(fn)
+  return Effect.callback(function(callback)
+    local co = coroutine.create(fn)
+    local function resume(err, value)
+      if err then
+        callback(err, nil)
+        return
+      end
+      local ok, effect_or_value = coroutine.resume(co, value)
+      if not ok then
+        callback(effect_or_value, nil)
+      elseif coroutine.status(co) == "dead" then
+        callback(nil, effect_or_value)
+      else
+        Effect.run(effect_or_value, resume)
+      end
+    end
+    resume(nil, nil)
+  end)
+end
+
 ---Run an effect and get the result via callback
 ---@generic T
 ---@param effect Effect<T>
@@ -196,6 +229,14 @@ end
 function Effect.context(effect, context)
   effect.context = context
   return effect
+end
+
+function Effect.service(effect, key)
+  local impl = effect.context:get(key)
+  if impl ~= nil then
+    return Effect.succeed(impl)
+  end
+  return Effect.fail("missing required service: " .. key)
 end
 
 return Effect
