@@ -14,8 +14,10 @@ end
 
 local Effect = require("effect.Effect")
 local FileSystem = require("effect.FileSystem")
+local JSON = require("effect.JSON")
 local luarc = require("my.luarcjson")
 local NvimFileSystem = require("effect-nvim.FileSystem")
+local NvimJSON = require("effect-nvim.JSON")
 
 ---@param effect Effect<any>
 local function program(effect)
@@ -25,6 +27,7 @@ end
 local function main()
     local effect = Effect.root()
     FileSystem.set(effect, NvimFileSystem)
+    JSON.set(effect, NvimJSON)
 
     Effect.run(program(effect), function(err, value)
         if err then
