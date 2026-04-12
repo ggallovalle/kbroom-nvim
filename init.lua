@@ -14,21 +14,23 @@ end
 
 local Effect = require("effect.Effect")
 local FileSystem = require("effect.FileSystem")
-
-
 local luarc = require("my.luarcjson")
-
----@param effect effect.Effect
-local function program(effect)
-    luarc.write_luarc_json(effect)
-end
-
 local NvimFileSystem = require("effect-nvim.FileSystem")
 
+---@param effect Effect<any>
+local function program(effect)
+    return luarc.write_luarc_json(effect)
+end
+
 local function main()
-    local effect = Effect.new()
+    local effect = Effect.succeed(nil)
     FileSystem.set(effect, NvimFileSystem)
-    program(effect)
+
+    Effect.run(program(effect), function(result)
+        if result.saved == "no-error" then
+            vim.notify("Failed to write .luarc.json", vim.log.levels.ERROR)
+        end
+    end)
 end
 
 main()

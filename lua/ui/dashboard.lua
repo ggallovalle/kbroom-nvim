@@ -144,12 +144,12 @@ local render = function()
   ---------------------------
   -- Setting highlights --
 
-  for i = hdr_start_idx, hdr_start_idx + #header - 2 do --> Ignore last two empty lines
-    vim.api.nvim_buf_add_highlight(buf, -1, "MiniStarterFooter", i, 0, -1) --> -1 for no namespace
-  end
-  for i = hdr_start_idx + #header - 2, hdr_start_idx + #header + #logo - 2 do --> Again, -2 because of empty lines
-    vim.api.nvim_buf_add_highlight(buf, -1, "MiniStarterHeader", i, 0, -1)
-  end
+  -- for i = hdr_start_idx, hdr_start_idx + #header - 2 do --> Ignore last two empty lines
+  --   vim.api.nvim_buf_add_highlight(buf, -1, "MiniStarterFooter", i, 0, -1) --> -1 for no namespace
+  -- end
+  -- for i = hdr_start_idx + #header - 2, hdr_start_idx + #header + #logo - 2 do --> Again, -2 because of empty lines
+  --   vim.api.nvim_buf_add_highlight(buf, -1, "MiniStarterHeader", i, 0, -1)
+  -- end
 
   -- The end --
   vim.opt_local.modifiable = false
