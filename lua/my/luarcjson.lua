@@ -1,6 +1,5 @@
 local Effect = require("effect.Effect")
 local FileSystem = require("effect.FileSystem")
-local F = require("effect.F")
 
 local M = {}
 
@@ -34,15 +33,13 @@ function M.write_luarc_json(effect)
     local luarc = M.luarc()
     local json_str = vim.fn.json_encode(luarc)
 
-    return F.pipe2(
-        FileSystem.get(effect),
-        Effect.flatMap(function(fs)
-            return Effect.callback(function(callback)
-                fs:exist(config_path, function(exists)
-                    if exists then
-                        callback({ path = config_path, saved = "no-already-exists" })
-                        return
-                    end
+    local get_fs = FileSystem.get(effect)
+    local chained = Effect.flatMap(get_fs, function(fs)
+        return Effect.callback(function(callback)
+            fs:exist(config_path, function(exists)
+                if exists then
+                    callback({ path = config_path, saved = "no-already-exists" })
+                else
                     fs:write_file_string(config_path, json_str, function(err, bytes)
                         if err then
                             callback({ path = config_path, saved = "no-error" })
@@ -50,10 +47,12 @@ function M.write_luarc_json(effect)
                             callback({ path = config_path, saved = "yes" })
                         end
                     end)
-                end)
+                end
             end)
         end)
-    )
+    end)
+
+    return chained
 end
 
 return M

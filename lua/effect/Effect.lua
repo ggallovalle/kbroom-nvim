@@ -33,11 +33,11 @@ Effect.__index = Effect
 ---@param value T
 ---@return Effect<T>
 function Effect.succeed(value)
-  local self = setmetatable({}, EffectImpl)
-  self.context = new_context()
-  self.op = "succeed"
-  self.args = value
-  return self
+    local self = setmetatable({}, EffectImpl)
+    self.context = new_context()
+    self.op = "succeed"
+    self.args = value
+    return self
 end
 
 ---Create a sync effect (runs a synchronous function)
@@ -45,11 +45,11 @@ end
 ---@param thunk fun(): T
 ---@return Effect<T>
 function Effect.sync(thunk)
-  local self = setmetatable({}, EffectImpl)
-  self.context = new_context()
-  self.op = "sync"
-  self.args = thunk
-  return self
+    local self = setmetatable({}, EffectImpl)
+    self.context = new_context()
+    self.op = "sync"
+    self.args = thunk
+    return self
 end
 
 ---Create a callback effect (from callback-style async function)
@@ -57,11 +57,11 @@ end
 ---@param fn fun(callback: fun(value: T))
 ---@return Effect<T>
 function Effect.callback(fn)
-  local self = setmetatable({}, EffectImpl)
-  self.context = new_context()
-  self.op = "callback"
-  self.args = fn
-  return self
+    local self = setmetatable({}, EffectImpl)
+    self.context = new_context()
+    self.op = "callback"
+    self.args = fn
+    return self
 end
 
 ---Map over an effect (static method)
@@ -69,33 +69,32 @@ end
 ---@param fn fun(a: A): B
 ---@return fun(e: Effect<A>): Effect<B>
 function Effect.map(fn)
-  return function(effect)
-    local self = setmetatable({}, EffectImpl)
-    self.context = effect.context
-    self.op = "map"
-    self.args = {
-      _effect = effect,
-      _fn = fn,
-    }
-    return self
-  end
+    return function(effect)
+        local self = setmetatable({}, EffectImpl)
+        self.context = effect.context
+        self.op = "map"
+        self.args = {
+            _effect = effect,
+            _fn = fn,
+        }
+        return self
+    end
 end
 
----FlatMap/chain effects (static method)
+---FlatMap/chain effects (static method) - dual API
 ---@generic A, B
+---@param effect Effect<A>
 ---@param fn fun(a: A): Effect<B>
----@return fun(e: Effect<A>): Effect<B>
-function Effect.flatMap(fn)
-  return function(effect)
+---@return Effect<B>
+function Effect.flatMap(effect, fn)
     local self = setmetatable({}, EffectImpl)
     self.context = effect.context
     self.op = "flatMap"
     self.args = {
-      _effect = effect,
-      _fn = fn,
+        _effect = effect,
+        _fn = fn,
     }
     return self
-  end
 end
 
 ---Run an effect and get the result via callback
@@ -103,31 +102,32 @@ end
 ---@param effect Effect<T>
 ---@param callback fun(value: T)
 function Effect.run(effect, callback)
-  local function run_rec(e)
-    if e.op == "succeed" then
-      return e.args
-    elseif e.op == "sync" then
-      return e.args()
-    elseif e.op == "callback" then
-      local result
-      local done = false
-      e.args(function(value)
-        result = value
-        done = true
-      end)
-      while not done do
-      end
-      return result
-    elseif e.op == "map" then
-      local value = run_rec(e.args._effect)
-      return e.args._fn(value)
-    elseif e.op == "flatMap" then
-      local inner = run_rec(e.args._effect)
-      return run_rec(e.args._fn(inner))
+    local function run_rec(e, cb)
+        if e.op == "succeed" then
+            cb(e.args)
+        elseif e.op == "sync" then
+            cb(e.args())
+        elseif e.op == "callback" then
+            local wrapped_cb = function(value)
+                vim.schedule(function()
+                    cb(value)
+                end)
+            end
+            e.args(wrapped_cb)
+        elseif e.op == "map" then
+            run_rec(e.args._effect, function(value)
+                cb(e.args._fn(value))
+            end)
+        elseif e.op == "flatMap" then
+            run_rec(e.args._effect, function(inner)
+                run_rec(e.args._fn(inner), cb)
+            end)
+        end
     end
-  end
 
-  callback(run_rec(effect))
+    vim.schedule(function()
+        run_rec(effect, callback)
+    end)
 end
 
 ---Set context on an effect (returns new effect with context)
@@ -136,8 +136,8 @@ end
 ---@param context EffectContext
 ---@return Effect<T>
 function Effect.context(effect, context)
-  effect.context = context
-  return effect
+    effect.context = context
+    return effect
 end
 
 return Effect

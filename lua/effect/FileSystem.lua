@@ -16,7 +16,8 @@ local Service = {
 ---@param effect Effect<any>
 ---@return Effect<effect.FileSystem>
 function Service.get(effect)
-    return Effect.succeed(effect.context:get(key))
+    local fs = effect.context:get(key)
+    return Effect.succeed(fs)
 end
 
 ---Set the FileSystem implementation in an effect context
