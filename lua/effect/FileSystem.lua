@@ -6,25 +6,8 @@
 ---@field exist fun(self: effect.FileSystem, path: string): Effect<boolean>
 
 local Effect = require("effect.Effect")
-local key = "effect/FileSystem"
 
-local Service = {
-  key = key,
-}
-
----Get the FileSystem service from an effect context
----@param effect Effect<any>
----@return Effect<effect.FileSystem>
-function Service.get(effect)
-  return Effect.service(effect, key)
-end
-
----Set the FileSystem implementation in an effect context
----@param effect Effect<any>
----@param implementation effect.FileSystem
-function Service.set(effect, implementation)
-  assert(implementation.service == key)
-  effect.context:set(key, implementation)
-end
+---@type ServiceModule<effect.FileSystem>
+local Service = Effect.Service("effect/FileSystem")
 
 return Service

@@ -18,7 +18,8 @@ local NvimRuntime = require("effect-nvim.NvimRuntime")
 
 ---@param effect Effect<any>
 local function program(effect)
-    return luarc.write_luarc_json(effect)
+    -- return luarc.write_luarc_json(effect)
+    return luarc.create_luarc_json(effect)
 end
 
 local function main()

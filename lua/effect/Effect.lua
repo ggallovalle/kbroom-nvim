@@ -3,6 +3,14 @@
 ---@field op string Operation type: "succeed" | "fail" | "sync" | "callback" | "map" | "flatMap" | "mapError" | "service" | "gen"
 ---@field args any Arguments for the operation
 
+---@class ServiceModule<T>
+---@field get fun(effect: Effect<any>): Effect<T>
+
+---@class AsyncRuntime
+---@field effect Effect<any> The effect context
+---@field await fun<T>(effect: Effect<T>): T
+---@field resolve fun<T>(service_module: ServiceModule<T>): T
+
 ---@class EffectContext
 ---@field get fun(self: EffectContext, key: string): any
 ---@field set fun(self: EffectContext, key: string, value: any)
@@ -140,6 +148,27 @@ end
 ---@return T
 function Effect.yield(effect)
   return coroutine.yield(effect)
+end
+
+---Create an async function with runtime helpers
+---@generic T
+---@param fn fun(runtime: AsyncRuntime): T
+---@return fun(effect: Effect<any>): Effect<T>
+function Effect.async(fn)
+  return function(effect)
+    return Effect.gen(function()
+      local runtime = {
+        effect = effect,
+        await = function(eff)
+          return Effect.yield(eff)
+        end,
+        resolve = function(service_module)
+          return Effect.yield(service_module.get(effect))
+        end,
+      }
+      return fn(runtime)
+    end)
+  end
 end
 
 ---Create an effect from a generator function (async/await style)
@@ -281,6 +310,21 @@ function Effect.service(effect, key)
   self.op = "service"
   self.args = { _key = key }
   return self
+end
+
+---Create a service module
+---@param key string
+---@return ServiceModule<any>
+function Effect.Service(key)
+  return {
+    key = key,
+    get = function(effect)
+      return Effect.service(effect, key)
+    end,
+    set = function(effect, implementation)
+      effect.context:set(key, implementation)
+    end,
+  }
 end
 
 return Effect
