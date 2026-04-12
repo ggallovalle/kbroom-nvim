@@ -13,11 +13,13 @@ if current < min then
 end
 
 local Effect = require("effect.Effect")
+local Env = require("effect.Env")
 local FileSystem = require("effect.FileSystem")
 local JSON = require("effect.JSON")
 local Path = require("effect.Path")
 local XdgDirs = require("effect.XdgDirs")
 local luarc = require("my.luarcjson")
+local NvimEnv = require("effect-nvim.Env")
 local NvimFileSystem = require("effect-nvim.FileSystem")
 local NvimJSON = require("effect-nvim.JSON")
 local NvimPath = require("effect-nvim.Path")
@@ -30,6 +32,7 @@ end
 
 local function main()
     local effect = Effect.root()
+    Env.set(effect, NvimEnv)
     FileSystem.set(effect, NvimFileSystem)
     JSON.set(effect, NvimJSON)
     Path.set(effect, NvimPath)

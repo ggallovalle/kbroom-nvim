@@ -1,4 +1,5 @@
 local Effect = require("effect.Effect")
+local Env = require("effect.Env")
 local FileSystem = require("effect.FileSystem")
 local JSON = require("effect.JSON")
 local Path = require("effect.Path")
@@ -8,8 +9,9 @@ local M = {}
 
 ---@param path effect.Path
 ---@param xdg effect.XdgDirs
+---@param env effect.Env
 ---@return table
-function M.luarc(path, xdg)
+function M.luarc(path, xdg, env)
   local data_path = xdg:data()
 
   local luarc = {
@@ -23,7 +25,7 @@ function M.luarc(path, xdg)
     workspace = {
       checkThirdParty = false,
       library = {
-        vim.env.VIMRUNTIME,
+        env:get("VIMRUNTIME"),
         path:join(data_path, "lazy"),
       },
     },
@@ -41,7 +43,8 @@ function M.write_luarc_json(effect)
     local config_path = path_svc:join(xdg:config(), ".luarc.json")
 
     local json = Effect.yield(JSON.get(effect))
-    local luarc = M.luarc(path_svc, xdg)
+    local env = Effect.yield(Env.get(effect))
+    local luarc = M.luarc(path_svc, xdg, env)
     local json_str = Effect.yield(json:encode(luarc))
 
     local fs = Effect.yield(FileSystem.get(effect))
