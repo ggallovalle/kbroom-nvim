@@ -8,3 +8,5 @@ foo.*
 node_modules
 tt.*
 
+# generated
+.luarc.json

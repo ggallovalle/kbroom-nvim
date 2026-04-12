@@ -76,6 +76,39 @@ H.make_server_configs = function()
     configNamespace = "typescript",
   }
 
+  local lua_ls_config = {
+    settings = {
+      Lua = {
+        telemetry = { enable = false },
+      },
+    },
+    on_init = function(client)
+      if client.workspace_folders then
+        local path = client.workspace_folders[1].name
+        if path ~= vim.fn.stdpath("config") then
+          return
+        end
+      end
+
+      client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+        runtime = {
+          version = "LuaJIT",
+          path = {
+            "lua/?.lua",
+            "lua/?/init.lua",
+          },
+        },
+        workspace = {
+          checkThirdParty = false,
+          library = {
+            vim.env.VIMRUNTIME,
+            vim.fn.stdpath("data") .. "/lazy",
+          },
+        },
+      })
+    end,
+  }
+
   local servers = {
     bashls = {},
     texlab = {},
@@ -93,47 +126,48 @@ H.make_server_configs = function()
     jsonls = {},
     oxfmt = {},
     oxlint = {},
-    lua_ls = {
-      settings = {
-        Lua = {
-          telemetry = { enable = false },
-        },
-      },
-      on_init = function(client)
-        if client.workspace_folders then
-          local path = client.workspace_folders[1].name
-          if path ~= vim.fn.stdpath("config") then
-            return
-          end
-        end
-
-        client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
-          runtime = {
-            version = "LuaJIT",
-            path = {
-              "lua/?.lua",
-              "lua/?/init.lua",
-            },
-          },
-          workspace = {
-            checkThirdParty = false,
-            library = {
-              vim.env.VIMRUNTIME,
-              vim.fn.stdpath("data") .. "/lazy",
-              -- Depending on the usage, you might want to add additional paths
-              -- here.
-              -- '${3rd}/luv/library',
-              -- '${3rd}/busted/library',
-            },
-          },
-        })
-      end,
-    },
+    lua_ls = lua_ls_config,
     phpactor = {},
     rust_analyzer = {},
   }
 
   return servers
+end
+
+H.write_luarc_json = function(fs)
+  local config_path = vim.fs.joinpath(vim.fn.stdpath("config"), ".luarc.json")
+  local data_path = vim.fn.stdpath("data")
+
+  local luarc = {
+    runtime = {
+      version = "LuaJIT",
+      path = {
+        "lua/?.lua",
+        "lua/?/init.lua",
+      },
+    },
+    workspace = {
+      checkThirdParty = false,
+      library = {
+        vim.env.VIMRUNTIME,
+        data_path .. "/lazy",
+      },
+    },
+  }
+
+  local json_str = vim.fn.json_encode(luarc)
+
+  fs:exist(config_path, function(exists)
+    if exists then
+      return
+    end
+
+    fs:write(config_path, json_str, function(err, bytes)
+      if err then
+        vim.notify("Failed to write .luarc.json: " .. err, vim.log.levels.ERROR)
+      end
+    end)
+  end)
 end
 
 H.set_config_defaults = function()
@@ -244,6 +278,8 @@ local LspConfig = {
       end,
     })
 
+    local FileSystem = require("effect-nvim.FileSystem")
+
     H.set_config_defaults()
 
     require("mason").setup()
@@ -252,6 +288,8 @@ local LspConfig = {
     for server, config in pairs(servers) do
       vim.lsp.config(server, config)
     end
+
+    H.write_luarc_json(FileSystem)
 
     require("mason-lspconfig").setup({
       ensure_installed = vim.tbl_keys(servers or {}),

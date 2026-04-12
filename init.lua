@@ -1,23 +1,34 @@
---- init.lua
+-- requires version of nvim >= 0.12
+local min_version = "0.12"
+local current = vim.version()
+local min = vim.version.parse(min_version)
 
-vim.g.have_nerd_font = true
+if current < min then
+    vim.notify(
+        string.format("Neovim %s+ required, current: %s", min_version, current),
+        vim.log.levels.ERROR,
+        { title = "Version Check" }
+    )
+    return
+end
 
-require("setup.options").setup()
-require("setup.keymap").setup()
-require("setup.user_command").setup()
-require("setup.autocmd").setup()
--- TODO: add lazy keymap
--- require("setup.netrw").setup() -- -> prefer oil.nvim
-require("setup.diagnostic").setup()
-require("setup.lazy_nvim").setup()
+local Effect = require("effect.Effect")
+local FileSystem = require("effect.FileSystem")
 
--- {{{ UI module calls
-require("ui.tabline").setup()
-require("ui.dashboard").setup()
--- }}}
 
-require("setup.neovide").setup()
-require("globals").setup()
+local luarc = require("my.luarcjson")
 
--- vim: foldmethod=marker
+---@param effect effect.Effect
+local function program(effect)
+    luarc.write_luarc_json(effect)
+end
 
+local NvimFileSystem = require("effect-nvim.FileSystem")
+
+local function main()
+    local effect = Effect.new()
+    FileSystem.set(effect, NvimFileSystem)
+    program(effect)
+end
+
+main()
