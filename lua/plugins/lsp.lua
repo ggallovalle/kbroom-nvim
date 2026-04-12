@@ -65,7 +65,90 @@ local Phpactor = {
 
 local H = {}
 
-H.on_attach = function(event)
+H.make_server_configs = function()
+  local vue_language_server_path = vim.fn.stdpath("data")
+      .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+  local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
+  local vue_plugin = {
+    name = "@vue/typescript-plugin",
+    location = vue_language_server_path,
+    languages = { "vue" },
+    configNamespace = "typescript",
+  }
+
+  local servers = {
+    bashls = {},
+    texlab = {},
+    basedpyright = {},
+    ruff = {},
+    ts_ls = {
+      init_options = {
+        plugins = {
+          vue_plugin,
+        },
+      },
+      filetypes = tsserver_filetypes,
+    },
+    vue_ls = {},
+    jsonls = {},
+    oxfmt = {},
+    oxlint = {},
+    lua_ls = {
+      settings = {
+        Lua = {
+          telemetry = { enable = false },
+        },
+      },
+      on_init = function(client)
+        if client.workspace_folders then
+          local path = client.workspace_folders[1].name
+          if path ~= vim.fn.stdpath("config") then
+            return
+          end
+        end
+
+        client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+          runtime = {
+            version = "LuaJIT",
+            path = {
+              "lua/?.lua",
+              "lua/?/init.lua",
+            },
+          },
+          workspace = {
+            checkThirdParty = false,
+            library = {
+              vim.env.VIMRUNTIME,
+              vim.fn.stdpath("data") .. "/lazy",
+              -- Depending on the usage, you might want to add additional paths
+              -- here.
+              -- '${3rd}/luv/library',
+              -- '${3rd}/busted/library',
+            },
+          },
+        })
+      end,
+    },
+    phpactor = {},
+    rust_analyzer = {},
+  }
+
+  return servers
+end
+
+H.set_config_defaults = function()
+  local capabilities = vim.tbl_deep_extend(
+    "force",
+    vim.lsp.protocol.make_client_capabilities(),
+    require("cmp_nvim_lsp").default_capabilities()
+  )
+
+  vim.lsp.config("*", {
+    capabilities = capabilities,
+  })
+end
+
+H.on_attach = function(event, kbroom_lsp_hl_group, kbroom_lsp_detach_group)
   local map = function(keys, func, desc)
     vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
   end
@@ -107,14 +190,12 @@ H.on_attach = function(event)
 
   local client = vim.lsp.get_client_by_id(event.data.client_id)
   if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-    local kbroom_lsp_hl_group = vim.api.nvim_create_augroup("KBroomLspHl", { clear = false })
     vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
       buffer = event.buf,
       group = kbroom_lsp_hl_group,
       callback = vim.lsp.buf.document_highlight,
     })
 
-    local kbroom_lsp_detach_group = vim.api.nvim_create_augroup("KBroomLspHlDetach", { clear = true })
     vim.api.nvim_create_autocmd("LspDetach", {
       group = kbroom_lsp_detach_group,
       callback = function(event2)
@@ -153,82 +234,20 @@ local LspConfig = {
   config = function()
     local kbroom_lsp_config_group = vim.api.nvim_create_augroup("KBroomLspConfig", { clear = true })
 
+    local kbroom_lsp_hl_group = vim.api.nvim_create_augroup("KBroomLspHl", { clear = true })
+    local kbroom_lsp_detach_group = vim.api.nvim_create_augroup("KBroomLspHlDetach", { clear = true })
+
     vim.api.nvim_create_autocmd("LspAttach", {
       group = kbroom_lsp_config_group,
-      callback = H.on_attach,
+      callback = function(event)
+        H.on_attach(event, kbroom_lsp_hl_group, kbroom_lsp_detach_group)
+      end,
     })
 
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+    H.set_config_defaults()
 
     require("mason").setup()
-
-    local vue_language_server_path = vim.fn.stdpath("data")
-        .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
-    local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
-    local vue_plugin = {
-      name = "@vue/typescript-plugin",
-      location = vue_language_server_path,
-      languages = { "vue" },
-      configNamespace = "typescript",
-    }
-
-    local servers = {
-      bashls = {},
-      texlab = {},
-      basedpyright = {},
-      ruff = {},
-      ts_ls = {
-        init_options = {
-          plugins = {
-            vue_plugin,
-          },
-        },
-        filetypes = tsserver_filetypes,
-      },
-      vue_ls = {},
-      jsonls = {},
-      oxfmt = {},
-      oxlint = {},
-      lua_ls = {
-        settings = {
-          Lua = {
-            telemetry = { enable = false },
-          },
-        },
-        on_init = function(client)
-          if client.workspace_folders then
-            local path = client.workspace_folders[1].name
-            if path ~= vim.fn.stdpath("config") then
-              return
-            end
-          end
-
-          client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
-            runtime = {
-              version = "LuaJIT",
-              path = {
-                "lua/?.lua",
-                "lua/?/init.lua",
-              },
-            },
-            workspace = {
-              checkThirdParty = false,
-              library = {
-                vim.env.VIMRUNTIME,
-                vim.fn.stdpath("data") .. "/lazy",
-                -- Depending on the usage, you might want to add additional paths
-                -- here.
-                -- '${3rd}/luv/library',
-                -- '${3rd}/busted/library',
-              },
-            },
-          })
-        end,
-      },
-      phpactor = {},
-      rust_analyzer = {},
-    }
+    local servers = H.make_server_configs()
 
     for server, config in pairs(servers) do
       vim.lsp.config(server, config)
