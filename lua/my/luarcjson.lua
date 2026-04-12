@@ -1,6 +1,7 @@
 local Effect = require("effect.Effect")
 local FileSystem = require("effect.FileSystem")
 local JSON = require("effect.JSON")
+local Path = require("effect.Path")
 
 local M = {}
 
@@ -30,9 +31,10 @@ end
 ---@param effect Effect<any>
 ---@return Effect<{path: string, saved: "yes" | "no-already-exists"}>
 function M.write_luarc_json(effect)
-  local config_path = vim.fs.joinpath(vim.fn.stdpath("config"), ".luarc.json")
-
   return Effect.gen(function()
+    local path = Effect.yield(Path.get(effect))
+    local config_path = path:join(vim.fn.stdpath("config"), ".luarc.json")
+
     local json = Effect.yield(JSON.get(effect))
     local luarc = M.luarc()
     local json_str = Effect.yield(json:encode(luarc))
