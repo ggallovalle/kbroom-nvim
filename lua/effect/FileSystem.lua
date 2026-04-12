@@ -9,15 +9,15 @@ local Effect = require("effect.Effect")
 local key = "effect/FileSystem"
 
 local Service = {
-  key = key
+  key = key,
 }
 
 ---Get the FileSystem service from an effect context
 ---@param effect Effect<any>
 ---@return Effect<effect.FileSystem>
 function Service.get(effect)
-    local fs = effect.context:get(key)
-    return Effect.succeed(fs)
+  local fs = effect.context:get(key)
+  return Effect.succeed(fs)
 end
 
 ---Set the FileSystem implementation in an effect context

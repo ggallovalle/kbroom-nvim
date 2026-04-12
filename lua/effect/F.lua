@@ -8,9 +8,9 @@ local Effect = require("effect.Effect")
 ---@param mapper fun(e: Effect<A>): Effect<A>
 ---@return Effect<A>
 local function pipe2(effect, mapper)
-    return mapper(effect)
+  return mapper(effect)
 end
 
 return {
-    pipe2 = pipe2,
+  pipe2 = pipe2,
 }

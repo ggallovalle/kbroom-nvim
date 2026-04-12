@@ -23,7 +23,7 @@ local function program(effect)
 end
 
 local function main()
-    local effect = Effect.succeed(nil)
+    local effect = Effect.root()
     FileSystem.set(effect, NvimFileSystem)
 
     Effect.run(program(effect), function(result)
