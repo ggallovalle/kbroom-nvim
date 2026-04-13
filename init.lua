@@ -16,16 +16,24 @@ local Effect = require("effect.Effect")
 local luarc = require("my.luarcjson")
 local NvimRuntime = require("effect-nvim.NvimRuntime")
 
----@param effect Effect<any>
-local function program(effect)
-    -- return luarc.write_luarc_json(effect)
-    return luarc.create_luarc_json(effect)
-end
+-- ---@param effect Effect<any>
+-- local function program(effect)
+--     -- return luarc.write_luarc_json(effect)
+--     return luarc.create_luarc_json(effect)
+-- end
+
+local program = Effect.async(function(rt)
+    local _ = rt:yield(luarc.create_luarc_json("one1.json"))
+    local _ = rt:yield(luarc.create_luarc_json("two2.json"))
+    local third = rt:yield(luarc.write_luarc_json)
+    return third
+end)
 
 local function main()
     local effect = Effect.root()
     NvimRuntime(effect)
     local runner = program(effect)
+---@diagnostic disable-next-line: undefined-field
     local before = vim.inspect({ before = "run", deps = runner.args._dependencies })
     vim.api.nvim_echo({ { before, "Title" } }, true, {})
 

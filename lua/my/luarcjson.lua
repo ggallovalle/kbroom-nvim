@@ -67,24 +67,29 @@ function M.write_luarc_json(effect)
     end)
 end
 
-M.create_luarc_json = Effect.async(function(rt)
-    local xdg = rt.resolve(XdgDirs)
-    local path_svc = rt.resolve(Path)
-    local json = rt.resolve(JSON)
-    local env = rt.resolve(Env)
-    local fs = rt.resolve(FileSystem)
+---comment
+---@param target any
+---@return fun(effect: Effect<any>):Effect<my.luarcjson.write_luarc_json_Result>
+M.create_luarc_json = function(target)
+    return Effect.async(function(rt)
+        local xdg = rt:resolve(XdgDirs)
+        local path_svc = rt:resolve(Path)
+        local json = rt:resolve(JSON)
+        local env = rt:resolve(Env)
+        local fs = rt:resolve(FileSystem)
 
-    local config_path = path_svc:join(xdg:config(), ".luarc.json")
-    local luarc = M.luarc(path_svc, xdg, env)
-    local json_str = rt.await(json:encode(luarc))
+        local config_path = path_svc:join(xdg:config(), target)
+        local luarc = M.luarc(path_svc, xdg, env)
+        local json_str = rt:await(json:encode(luarc))
 
-    local exists = rt.await(fs:exist(config_path))
-    if exists then
-        return write_luarc_json_result { path = config_path, saved = "no-already-exists" }
-    end
-    rt.await(fs:write_file_string(config_path, json_str))
+        local exists = rt:await(fs:exist(config_path))
+        if exists then
+            return write_luarc_json_result { path = config_path, saved = "no-already-exists" }
+        end
+        rt:await(fs:write_file_string(config_path, json_str))
 
-    return write_luarc_json_result { path = config_path, saved = "yes" }
-end)
+        return write_luarc_json_result { path = config_path, saved = "yes" }
+    end)
+end
 
 return M

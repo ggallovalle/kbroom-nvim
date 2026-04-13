@@ -8,8 +8,9 @@
 
 ---@class AsyncRuntime
 ---@field effect Effect<any> The effect context
----@field await fun<T>(effect: Effect<T>): T
----@field resolve fun<T>(service_module: ServiceModule<T>): T
+---@field await fun<T>(self: AsyncRuntime, effect: Effect<T>): T
+---@field yield fun<T>(self: AsyncRuntime, effect_gen: fun(effect: Effect<any>): Effect<T>): T
+---@field resolve fun<T>(self: AsyncRuntime, service_module: ServiceModule<T>): T
 
 ---@class EffectContext
 ---@field get fun(self: EffectContext, key: string): any
@@ -159,10 +160,13 @@ function Effect.async(fn)
     return Effect.gen(function()
       local runtime = {
         effect = effect,
-        await = function(eff)
+        await = function(_self, eff)
           return Effect.yield(eff)
         end,
-        resolve = function(service_module)
+        yield = function(_self, eff_gen)
+          return Effect.yield(eff_gen(effect))
+        end,
+        resolve = function(_self, service_module)
           return Effect.yield(service_module.get(effect))
         end,
       }
