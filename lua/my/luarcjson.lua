@@ -43,30 +43,6 @@ local function write_luarc_json_result(result)
     return result
 end
 
----Write .luarc.json to nvim config directory
----@param effect Effect<any>
----@return Effect<{path: string, saved: "yes" | "no-already-exists"}>
-function M.write_luarc_json(effect)
-    return Effect.gen(function()
-        local xdg = Effect.yield(XdgDirs.get(effect))
-        local path_svc = Effect.yield(Path.get(effect))
-        local json = Effect.yield(JSON.get(effect))
-        local env = Effect.yield(Env.get(effect))
-        local fs = Effect.yield(FileSystem.get(effect))
-
-        local config_path = path_svc:join(xdg:config(), ".luarc.json")
-        local luarc = M.luarc(path_svc, xdg, env)
-        local json_str = Effect.yield(json:encode(luarc))
-
-        local exists = Effect.yield(fs:exist(config_path))
-        if exists then
-            return { path = config_path, saved = "no-already-exists" }
-        end
-        Effect.yield(fs:write_file_string(config_path, json_str))
-        return { path = config_path, saved = "yes" }
-    end)
-end
-
 ---comment
 ---@param target any
 ---@return fun(effect: Effect<any>):Effect<my.luarcjson.write_luarc_json_Result>

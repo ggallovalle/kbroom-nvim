@@ -23,10 +23,9 @@ local NvimRuntime = require("effect-nvim.NvimRuntime")
 -- end
 
 local program = Effect.async(function(rt)
-    local _ = rt:yield(luarc.create_luarc_json("one1.json"))
-    local _ = rt:yield(luarc.create_luarc_json("two2.json"))
-    local third = rt:yield(luarc.write_luarc_json)
-    return third
+    local first = rt:yield(luarc.create_luarc_json("one1.json"))
+    local second = rt:yield(luarc.create_luarc_json("two2.json"))
+    return first.saved .. " AND " .. second.saved ---@type string
 end)
 
 local function main()

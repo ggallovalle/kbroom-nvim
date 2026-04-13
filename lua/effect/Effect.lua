@@ -1,13 +1,10 @@
 ---@class Effect<T>
 ---@field context EffectContext The DI context
----@field op string Operation type: "succeed" | "fail" | "sync" | "callback" | "map" | "flatMap" | "mapError" | "service" | "gen"
----@field args any Arguments for the operation
 
 ---@class ServiceModule<T>
 ---@field get fun(effect: Effect<any>): Effect<T>
 
 ---@class AsyncRuntime
----@field effect Effect<any> The effect context
 ---@field await fun<T>(self: AsyncRuntime, effect: Effect<T>): T
 ---@field yield fun<T>(self: AsyncRuntime, effect_gen: fun(effect: Effect<any>): Effect<T>): T
 ---@field resolve fun<T>(self: AsyncRuntime, service_module: ServiceModule<T>): T
@@ -29,6 +26,10 @@ local function new_context()
     end,
   }
 end
+
+local H = {
+    empty_context = new_context()
+}
 
 local EffectImpl = {}
 EffectImpl.__index = EffectImpl
@@ -94,80 +95,22 @@ function Effect.callback(fn)
   return self
 end
 
----Map over an effect (static method) - dual API
----@generic A, B
----@param effect Effect<A>
----@param fn fun(a: A): B
----@return Effect<B>
-function Effect.map(effect, fn)
-  local self = setmetatable({}, EffectImpl)
-  self.context = effect.context
-  self.op = "map"
-  self.args = {
-    _effect = effect,
-    _fn = fn,
-  }
-  return self
-end
-
----FlatMap/chain effects (static method) - dual API
----@generic A, B
----@param effect Effect<A>
----@param fn fun(a: A): Effect<B>
----@return Effect<B>
-function Effect.flatMap(effect, fn)
-  local self = setmetatable({}, EffectImpl)
-  self.context = effect.context
-  self.op = "flatMap"
-  self.args = {
-    _effect = effect,
-    _fn = fn,
-  }
-  return self
-end
-
----Map over an effect's error (static method)
----@generic T
----@param fn fun(err: string): string
----@return fun(effect: Effect<T>): Effect<T>
-function Effect.mapError(fn)
-  return function(effect)
-    local self = setmetatable({}, EffectImpl)
-    self.context = effect.context
-    self.op = "mapError"
-    self.args = {
-      _effect = effect,
-      _fn = fn,
-    }
-    return self
-  end
-end
-
----Yield to an effect (suspend coroutine, run effect, resume with value)
----@generic T
----@param effect Effect<T>
----@return T
-function Effect.yield(effect)
-  return coroutine.yield(effect)
-end
-
 ---Create an async function with runtime helpers
 ---@generic T
 ---@param fn fun(runtime: AsyncRuntime): T
 ---@return fun(effect: Effect<any>): Effect<T>
 function Effect.async(fn)
   return function(effect)
-    return Effect.gen(function()
+    return H.gen(function()
       local runtime = {
-        effect = effect,
         await = function(_self, eff)
-          return Effect.yield(eff)
+          return coroutine.yield(eff)
         end,
-        yield = function(_self, eff_gen)
-          return Effect.yield(eff_gen(effect))
+        yield = function(self, eff_gen)
+          return coroutine.yield(eff_gen(effect))
         end,
-        resolve = function(_self, service_module)
-          return Effect.yield(service_module.get(effect))
+        resolve = function(self, service_module)
+          return coroutine.yield(service_module.get(effect))
         end,
       }
       return fn(runtime)
@@ -175,11 +118,7 @@ function Effect.async(fn)
   end
 end
 
----Create an effect from a generator function (async/await style)
----@generic T
----@param fn fun(): T
----@return Effect<T>
-function Effect.gen(fn)
+function H.gen(fn)
   local co = coroutine.create(fn)
   local steps = {}
   local dependencies = {}
@@ -242,30 +181,6 @@ function Effect.run(effect, callback)
         end)
       end
       e.args(wrapped_cb)
-    elseif e.op == "map" then
-      run_rec(e.args._effect, function(err, value)
-        if err then
-          cb(err, nil)
-        else
-          cb(nil, e.args._fn(value))
-        end
-      end)
-    elseif e.op == "flatMap" then
-      run_rec(e.args._effect, function(err, value)
-        if err then
-          cb(err, nil)
-        else
-          run_rec(e.args._fn(value), cb)
-        end
-      end)
-    elseif e.op == "mapError" then
-      run_rec(e.args._effect, function(err, value)
-        if err then
-          cb(e.args._fn(err), nil)
-        else
-          cb(nil, value)
-        end
-      end)
     elseif e.op == "service" then
       local impl = e.context:get(e.args._key)
       if impl then
@@ -308,7 +223,7 @@ function Effect.context(effect, context)
   return effect
 end
 
-function Effect.service(effect, key)
+function H.service(effect, key)
   local self = setmetatable({}, EffectImpl)
   self.context = effect.context
   self.op = "service"
@@ -323,7 +238,7 @@ function Effect.Service(key)
   return {
     key = key,
     get = function(effect)
-      return Effect.service(effect, key)
+      return H.service(effect, key)
     end,
     set = function(effect, implementation)
       effect.context:set(key, implementation)
