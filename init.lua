@@ -12,25 +12,20 @@ if current < min then
     return
 end
 
-local Effect = require("effect.Effect")
-local luarc = require("my.luarcjson")
-local NvimRuntime = require("effect-nvim.NvimRuntime")
+vim.opt.rtp:prepend("/home/kbroom/dev/kbroom/effectual")
 
--- ---@param effect Effect<any>
--- local function program(effect)
---     -- return luarc.write_luarc_json(effect)
---     return luarc.create_luarc_json(effect)
--- end
+local Effect = require("effectual.Effect")
+local luarc = require("my.luarcjson")
 
 local program = Effect.async(function(rt)
-    local first = rt:yield(luarc.create_luarc_json("one1.json"))
+    local first = rt:yield(luarc.create_luarc_json(".luarc.json"))
     local second = rt:yield(luarc.create_luarc_json("two2.json"))
     return first.saved .. " AND " .. second.saved ---@type string
 end)
 
 local function main()
     local effect = Effect.root()
-    NvimRuntime(effect)
+    require("effectual-nvim").setup(effect)
     local runner = program(effect)
 ---@diagnostic disable-next-line: undefined-field
     local before = vim.inspect({ before = "run", deps = runner.args._dependencies })

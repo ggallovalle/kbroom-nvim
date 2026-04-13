@@ -1,9 +1,9 @@
-local Effect = require("effect.Effect")
-local Env = require("effect.Env")
-local FileSystem = require("effect.FileSystem")
-local JSON = require("effect.JSON")
-local Path = require("effect.Path")
-local XdgDirs = require("effect.XdgDirs")
+local Effect = require("effectual.Effect")
+local Env = require("effectual.Env")
+local FileSystem = require("effectual.FileSystem")
+local JSON = require("effectual.JSON")
+local Path = require("effectual.Path")
+local XdgDirs = require("effectual.XdgDirs")
 
 local M = {}
 
@@ -27,6 +27,7 @@ function M.luarc(path, xdg, env)
             library = {
                 env:get("VIMRUNTIME"),
                 path:join(data_path, "lazy"),
+                "/home/kbroom/dev/kbroom/effectual"
             },
         },
     }
